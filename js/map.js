@@ -40,12 +40,13 @@ var shuffle = function (array) {
   return array;
 };
 
-//  вызываем в цикле (каждый раз формируется случайное число)
+//   случайное число
 var random = function (array) {
   var randElement = Math.floor(Math.random() * (array.length + 1));
   return randElement;
 };
 
+// случайная обрезка
 var generateFeatures = function (array) {
   var newArray = [];
   for (var i = 0; i <= random(array); i++) {
@@ -131,14 +132,28 @@ var renderAd = function (ad) {
   MapAdElement.querySelector('.popup__avatar').alt = ad['author']['avatar'];
   MapAdElement.querySelector('.popup__title').textContent = ad['offer']['title'];
   MapAdElement.querySelector('.popup__text--address').textContent = ad['offer']['address'];
-  MapAdElement.querySelector('.popup__text--price').textContent = ad['offer']['price'];
+  MapAdElement.querySelector('.popup__text--price').textContent = ad['offer']['price'] + ' ' + 'P/ночь';
   MapAdElement.querySelector('.popup__type').textContent = ad['offer']['type'];
-  MapAdElement.querySelector('.popup__text--capacity').textContent = ad['offer']['rooms'] + ad['offer']['guests'];
-  MapAdElement.querySelector('.popup__text--time').textContent = ad['offer']['checkin'] + ad['offer']['checkout'];
+  MapAdElement.querySelector('.popup__text--capacity').textContent = ad['offer']['rooms'] + ' ' + 'комнаты для' + ' ' + ad['offer']['guests'] + ' ' + 'гостей';
+  MapAdElement.querySelector('.popup__text--time').textContent = 'Заезд после' + ' ' + ad['offer']['checkin'] + ' ' + 'Выезд до' + ' ' + ad['offer']['checkout'];
   MapAdElement.querySelector('.popup__avatar').alt = ad['author']['avatar'];
   MapAdElement.querySelector('.popup__avatar').src = ad['author']['avatar'];
+  MapAdElement.querySelector('.popup__photo').src = ad['offer']['photos'][0];
+
+  var image = MapAdElement.querySelector('.popup__photo');
+  for (i = 1; i < ad['offer']['photos'].length; i++) {
+    var PhotoElement = image.cloneNode(true);
+    MapAdElement.querySelector('.popup__photos').appendChild(PhotoElement);
+    image.src = ad['offer']['photos'][i];
+  }
+  var featuresElements = MapAdElement.querySelectorAll('.popup__feature');
+  for (i = 0; i < featuresElements.length; i++) {
+    featuresElements[i].textContent = ad['offer']['features'][i];
+  }
+
   return MapAdElement;
 };
+
 
 var fillPins = function () {
   for (i = 0; i < 8; i++) {
@@ -154,3 +169,5 @@ var mapFilters = document.querySelector('.map__filters-container');
 var parent = mapFilters.parentNode;
 
 parent.insertBefore(renderAd(ads[0]), mapFilters);
+
+
