@@ -7,7 +7,7 @@ var TITLES = ['Большая уютная квартира', 'Маленька�
 var LOCATIONS_X = [];
 var LOCATIONS_Y = [];
 var PRICES = [];
-var TYPES = ['palace', 'flat', 'house', 'bungalo', 'palace', 'flat', 'house', 'bungalo'];
+var TYPES = ['flat', 'palace', 'house', 'bungalo', 'palace', 'flat', 'house', 'bungalo'];
 var ROOMS = [];
 var GUESTS = [];
 var PHOTOS = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg',
@@ -133,12 +133,25 @@ var renderAd = function (ad) {
   MapAdElement.querySelector('.popup__title').textContent = ad['offer']['title'];
   MapAdElement.querySelector('.popup__text--address').textContent = ad['offer']['address'];
   MapAdElement.querySelector('.popup__text--price').textContent = ad['offer']['price'] + ' ' + 'P/ночь';
-  MapAdElement.querySelector('.popup__type').textContent = ad['offer']['type'];
   MapAdElement.querySelector('.popup__text--capacity').textContent = ad['offer']['rooms'] + ' ' + 'комнаты для' + ' ' + ad['offer']['guests'] + ' ' + 'гостей';
   MapAdElement.querySelector('.popup__text--time').textContent = 'Заезд после' + ' ' + ad['offer']['checkin'] + ' ' + 'Выезд до' + ' ' + ad['offer']['checkout'];
   MapAdElement.querySelector('.popup__avatar').alt = ad['author']['avatar'];
   MapAdElement.querySelector('.popup__avatar').src = ad['author']['avatar'];
   MapAdElement.querySelector('.popup__photo').src = ad['offer']['photos'][0];
+
+  var typeElement = MapAdElement.querySelector('.popup__type');
+
+  switch (ad['offer']['type']) {
+    case 'flat':
+      typeElement.textContent = 'Квартира';
+      break;
+    case 'bungalo':
+      typeElement.textContent = 'Бунгало';
+      break;
+    case 'house':
+      typeElement.textContent = 'Дом';
+      break;
+  }
 
   var image = MapAdElement.querySelector('.popup__photo');
   for (i = 1; i < ad['offer']['photos'].length; i++) {
