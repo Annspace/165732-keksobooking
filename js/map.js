@@ -207,14 +207,17 @@ mapPinMain.addEventListener('mouseup', function (e) {
   addressField.setAttribute('value', e.clientX + ',' + e.clientY);
 });
 
+// Метки и картинки связаны через src картинок
+// Обрезаем src картинки до img/avatars/user*.png , ищем такой же src у картинок
+// из набора ads, если нашли картинки с одинаковыми src, то добавляем соответствующий ad в DOM
+// в первый раз просто добавляем ad, последующие разы заменяем уже добавленный (flag для этого)
 
 var flag = 0;
 
-document.addEventListener('click', function (e) {
-  var tt = e.target;
-  var slicedTT = tt.src.substring(43, tt.src.length);
-  for (i = 0; i < ads.length; i++) {
-    if (ads[i]['author']['avatar'] === slicedTT) {
+var showCurrentAd = function (currentPin, adsArray) {
+  var slicedCurrentPin = currentPin.src.substring(43, currentPin.src.length);
+  for (i = 0; i < adsArray.length; i++) {
+    if (adsArray[i]['author']['avatar'] === slicedCurrentPin) {
       if (flag === 0) {
         var mapFilters = document.querySelector('.map__filters-container');
         mapFilters.parentNode.appendChild(renderAd(ads[i]));
@@ -227,5 +230,16 @@ document.addEventListener('click', function (e) {
       }
     }
   }
+};
+
+document.addEventListener('click', function (e) {
+  if (e.target.classList.contains('pin')) {
+    showCurrentAd(e.target, ads);
+  }
+  if (e.target.classList.contains('popup__close')) {
+    var mapCardPopup = document.querySelector('.map__card');
+    mapCardPopup.classList.add('hidden');
+  }
 });
+
 
