@@ -18,7 +18,7 @@ var CHECKOUTS = ['13:00', '12:00', '14:00', '13:00', '12:00', '14:00', '13:00', 
 var ads = [];
 
 var map = document.querySelector('.map');
-map.classList.remove('map--faded');
+// map.classList.remove('map--faded');
 
 var shuffle = function (array) {
   var counter = array.length;
@@ -114,21 +114,23 @@ for (var i = 0; i < 8; i++) {
 }
 
 var MapPinTemplate = document.querySelector('template').content;
+MapPinTemplate = MapPinTemplate.querySelectorAll('button')[1];
+var MapAdTemplate = document.querySelector('template').content;
+MapAdTemplate = MapAdTemplate.querySelector('article');
 var fragment = document.createDocumentFragment();
-
 
 var renderPin = function (ad) {
   var MapPinElement = MapPinTemplate.cloneNode(true);
-  MapPinElement.querySelector('.map__pin').style = 'left:' + ad['location']['x'] + 'px; top:'
+  MapPinElement.style = 'left:' + ad['location']['x'] + 'px; top:'
     + ads[i]['location']['y'] + 'px;';
-  MapPinElement.querySelector('.map__pin img').src = ad['author']['avatar'];
-  MapPinElement.querySelector('.map__pin img').alt = ad['offer']['title'];
+  MapPinElement.querySelector('img').src = ad['author']['avatar'];
+  MapPinElement.querySelector('img').alt = ad['offer']['title'];
 
   return MapPinElement;
 };
 
 var renderAd = function (ad) {
-  var MapAdElement = MapPinTemplate.cloneNode(true);
+  var MapAdElement = MapAdTemplate.cloneNode(true);
   MapAdElement.querySelector('.popup__avatar').alt = ad['author']['avatar'];
   MapAdElement.querySelector('.popup__title').textContent = ad['offer']['title'];
   MapAdElement.querySelector('.popup__text--address').textContent = ad['offer']['address'];
@@ -176,11 +178,54 @@ var fillPins = function () {
 };
 
 
-fillPins();
+// fillPins();
+// parent.insertBefore(renderAd(ads[0]), mapFilters);
 
-var mapFilters = document.querySelector('.map__filters-container');
-var parent = mapFilters.parentNode;
+var fields = document.querySelectorAll('fieldset');
 
-parent.insertBefore(renderAd(ads[0]), mapFilters);
+for (i = 0; i < fields.length; i++) {
+  fields[i].disabled = true;
+}
 
+var mapPinMain = document.querySelector('.map__pin--main');
+var adForm = document.querySelector('.ad-form');
+var addressField = document.getElementById('address');
+
+
+var makeMapActive = function () {
+  fillPins();
+  for (i = 0; i < fields.length; i++) {
+    fields[i].disabled = false;
+  }
+  map.classList.remove('map--faded');
+  adForm.classList.remove('ad-form--disabled');
+};
+
+
+mapPinMain.addEventListener('mouseup', function (e) {
+  makeMapActive();
+  addressField.setAttribute('value', e.clientX + ',' + e.clientY);
+});
+
+
+var flag = 0;
+
+document.addEventListener('click', function (e) {
+  var tt = e.target;
+  var slicedTT = tt.src.substring(43, tt.src.length);
+  for (i = 0; i < ads.length; i++) {
+    if (ads[i]['author']['avatar'] === slicedTT) {
+      if (flag === 0) {
+        var mapFilters = document.querySelector('.map__filters-container');
+        mapFilters.parentNode.appendChild(renderAd(ads[i]));
+        flag = 1;
+        break;
+      } else {
+        var mapCardPopup = document.querySelector('.map__card');
+        mapCardPopup.parentNode.replaceChild(renderAd(ads[i]), mapCardPopup);
+        break;
+      }
+    }
+  }
+});
 
