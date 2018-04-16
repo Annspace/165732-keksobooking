@@ -265,3 +265,5 @@ var makeMapInactive = function () {
 
 var resetButton = document.querySelector('.ad-form__reset');
 resetButton.addEventListener('click', makeMapInactive);
+
+
