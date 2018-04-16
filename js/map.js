@@ -232,14 +232,36 @@ var showCurrentAd = function (currentPin, adsArray) {
   }
 };
 
+var closeAd = function () {
+  var mapCardPopup = document.querySelector('.map__card');
+  mapCardPopup.classList.add('hidden');
+};
+
 document.addEventListener('click', function (e) {
   if (e.target.classList.contains('pin')) {
     showCurrentAd(e.target, ads);
   }
   if (e.target.classList.contains('popup__close')) {
-    var mapCardPopup = document.querySelector('.map__card');
-    mapCardPopup.classList.add('hidden');
+    closeAd();
   }
 });
 
+var makeMapInactive = function () {
+  for (i = 0; i < fields.length; i++) {
+    fields[i].disabled = true;
+  }
+  map.classList.add('map--faded');
+  adForm.classList.add('ad-form--disabled');
+  adForm.reset();
+  addressField.setAttribute('value', 601 + ',' + 401);
+  var mapPins = document.querySelectorAll('.map__pin');
+  for (i = 0; i < mapPins.length; i++) {
+    mapPins[i].style.display = 'none';
+    if (mapPins[i].classList.contains('map__pin--main')) {
+      mapPins[i].style.display = 'block';
+    }
+  }
+};
 
+var resetButton = document.querySelector('.ad-form__reset');
+resetButton.addEventListener('click', makeMapInactive);
