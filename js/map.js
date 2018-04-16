@@ -266,6 +266,83 @@ var makeMapInactive = function () {
 var resetButton = document.querySelector('.ad-form__reset');
 resetButton.addEventListener('click', makeMapInactive);
 
+// синхронизация приезда/отъезда
+var timeElem = document.querySelector('.ad-form__element--time');
+var timein = document.getElementById('timein');
+var timeout = document.getElementById('timeout');
 
+timeElem.onchange = function (e) {
+  var target = e.target;
+  timein.value = target.value;
+  timeout.value = target.value;
+};
+
+// синхронизация типа жилья и цены за ночь
+var typeElem = document.getElementById('type');
+var priceElem = document.getElementById('price');
+
+var compareTypePrice = function (t) {
+  switch (t) {
+    case 'bungalo':
+      priceElem.placeholder = 0;
+      priceElem.min = 0;
+      break;
+    case 'flat':
+      priceElem.placeholder = 1000;
+      priceElem.min = 1000;
+      break;
+    case 'house':
+      priceElem.placeholder = 5000;
+      priceElem.min = 5000;
+      break;
+    case 'palace':
+      priceElem.placeholder = 10000;
+      priceElem.min = 10000;
+      break;
+  }
+};
+
+typeElem.addEventListener('change', function (e) {
+  var target = e.target;
+  compareTypePrice(target.value);
+});
+
+// синхронизация числа гостей и комнат
+var room = document.getElementById('room_number');
+var capacity = document.getElementById('capacity');
+
+var compareRoomsGuests = function (roomVal, capacityVal) {
+  if (capacityVal !== '1' && roomVal === '1') {
+    capacity.setCustomValidity('Для 1 гостя');
+  } else {
+    capacity.setCustomValidity('');
+  }
+  if (capacityVal !== ('2' || '1') && roomVal === '2') {
+    capacity.setCustomValidity('Для 2 гостей или для 1 гостя');
+  } else {
+    capacity.setCustomValidity('');
+  }
+
+  if (capacityVal === '0' && roomVal === '3') {
+    capacity.setCustomValidity('для 3 гостей, для 2 гостей или для 1 гостя;');
+  } else {
+    capacity.setCustomValidity('');
+  }
+
+  if (capacityVal !== '0' && roomVal === '100') {
+    capacity.setCustomValidity('не для гостей');
+  } else {
+    capacity.setCustomValidity('');
+  }
+};
+
+
+room.addEventListener('change', function (e) {
+  compareRoomsGuests(e.target.value, capacity.value);
+});
+
+capacity.addEventListener('change', function (e) {
+  compareRoomsGuests(room.value, e.target.value);
+});
 
 
