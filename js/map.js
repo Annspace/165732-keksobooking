@@ -290,47 +290,27 @@ var compareTypePrice = function (t) {
   }
 };
 
-typeElem.addEventListener('change', function (e) {
-  var target = e.target;
-  compareTypePrice(target.value);
-});
-
 // синхронизация числа гостей и комнат
 var room = document.getElementById('room_number');
 var capacity = document.getElementById('capacity');
 
-var compareRoomsGuests = function (roomVal, capacityVal) {
-  if (capacityVal !== '1' && roomVal === '1') {
+var compareRoomsGuests = function (capVal, roomVal) {
+  if (capVal !== 1 && roomVal === 1) {
     capacity.setCustomValidity('Для 1 гостя');
-  } else {
-    capacity.setCustomValidity('');
-  }
-  if (capacityVal !== ('2' || '1') && roomVal === '2') {
-    capacity.setCustomValidity('Для 2 гостей или для 1 гостя');
-  } else {
-    capacity.setCustomValidity('');
-  }
-
-  if (capacityVal === '0' && roomVal === '3') {
-    capacity.setCustomValidity('для 3 гостей, для 2 гостей или для 1 гостя;');
-  } else {
-    capacity.setCustomValidity('');
-  }
-
-  if (capacityVal !== '0' && roomVal === '100') {
+  } else if (capVal === (3 || 0) && roomVal === 2) {
+    capacity.setCustomValidity('Для 2 гостей или 1 гостя');
+  } else if (capVal === 0 && roomVal === 3) {
+    capacity.setCustomValidity('для 3 гостей, для 2 гостей или для 1 гостя');
+  } else if (capVal !== 0 && roomVal === 100) {
     capacity.setCustomValidity('не для гостей');
   } else {
     capacity.setCustomValidity('');
   }
 };
 
-
-room.addEventListener('change', function (e) {
-  compareRoomsGuests(e.target.value, capacity.value);
-});
-
-capacity.addEventListener('change', function (e) {
-  compareRoomsGuests(room.value, e.target.value);
+document.addEventListener('change', function () {
+  compareTypePrice(typeElem.value);
+  compareRoomsGuests(Number(capacity.value), Number(room.value));
 });
 
 
