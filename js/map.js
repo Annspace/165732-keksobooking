@@ -18,7 +18,6 @@ var CHECKOUTS = ['13:00', '12:00', '14:00', '13:00', '12:00', '14:00', '13:00', 
 var ads = [];
 
 var map = document.querySelector('.map');
-// map.classList.remove('map--faded');
 
 var shuffle = function (array) {
   var counter = array.length;
@@ -62,12 +61,6 @@ var generateArray = function (k, l, array) {
   }
   return array;
 };
-
-// для features отрезаем кусок массива случайным образом
-// var cutArrayRandom = function (array) {
-//  array.length = random(array);
-//  return array;
-// };
 
 
 generateArray(300, 901, LOCATIONS_X);
@@ -113,14 +106,13 @@ for (var i = 0; i < 8; i++) {
   };
 }
 
-var MapPinTemplate = document.querySelector('template').content;
-MapPinTemplate = MapPinTemplate.querySelectorAll('button')[1];
-var MapAdTemplate = document.querySelector('template').content;
-MapAdTemplate = MapAdTemplate.querySelector('article');
+var MapTemplate = document.querySelector('template').content;
+var MapButtonTemplate = MapTemplate.querySelectorAll('button')[1];
+var MapAdTemplate = MapTemplate.querySelector('article');
 var fragment = document.createDocumentFragment();
 
 var renderPin = function (ad) {
-  var MapPinElement = MapPinTemplate.cloneNode(true);
+  var MapPinElement = MapButtonTemplate.cloneNode(true);
   MapPinElement.style = 'left:' + ad['location']['x'] + 'px; top:'
     + ads[i]['location']['y'] + 'px;';
   MapPinElement.querySelector('img').src = ad['author']['avatar'];
