@@ -259,11 +259,11 @@ var timeElem = document.querySelector('.ad-form__element--time');
 var timein = document.getElementById('timein');
 var timeout = document.getElementById('timeout');
 
-timeElem.onchange = function (e) {
+timeElem.addEventListener('change' ,function (e) {
   var target = e.target;
   timein.value = target.value;
   timeout.value = target.value;
-};
+});
 
 // синхронизация типа жилья и цены за ночь
 var typeElem = document.getElementById('type');
