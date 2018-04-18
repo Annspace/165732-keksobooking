@@ -16,12 +16,12 @@ var PHOTOS = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.g
 var FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
 var CHECKINS = ['12:00', '13:00', '14:00', '12:00', '13:00', '14:00', '12:00', '13:00'];
 var CHECKOUTS = ['13:00', '12:00', '14:00', '13:00', '12:00', '14:00', '13:00', '13:00'];
-var CURRENT_PIN_SRC_START = 43;
 var START_X = 601;
 var START_Y = 401;
 var NUMBER_PINS = 8;
 var NUMBER_ADS = 8;
 var ads = [];
+var avatars = [];
 
 // Селекторы
 var map = document.querySelector('.map');
@@ -200,12 +200,15 @@ var makeMapActive = function () {
 // Метки и картинки связаны через src картинок
 // Обрезаем src картинки до img/avatars/user*.png , ищем такой же src у картинок
 // из набора ads, если нашли картинки с одинаковыми src, то добавляем соответствующий ad в DOM
-// в первый раз просто добавляем ad, последующие разы заменяем уже добавленный (flag для этого)
+// в первый раз просто добавляем ad, последующие разы заменяем уже добавленный
+// отрезаем с конца (последние 10 символов)
 
 var showCurrentAd = function (currentPin, adsArray) {
-  var slicedCurrentPin = currentPin.src.substring(CURRENT_PIN_SRC_START, currentPin.src.length);
+  var slicedCurrentPin = currentPin.src.substring(currentPin.src.length - 10, currentPin.src.length);
   for (var i = 0; i < adsArray.length; i++) {
-    if (adsArray[i]['author']['avatar'] === slicedCurrentPin) {
+    avatars[i] = adsArray[i]['author']['avatar'];
+    var slicedAdAvatar = avatars[i].substring(avatars[i].length - 10, avatars[i].length);
+    if (slicedAdAvatar === slicedCurrentPin) {
       if (document.querySelector('.map__card')) {
         var mapCardPopup = document.querySelector('.map__card');
         mapCardPopup.parentNode.replaceChild(renderAd(ads[i]), mapCardPopup);
