@@ -259,9 +259,6 @@ var adShowHide = function (clikedElem) {
 makeMapInactive();
 
 // Обработчики событий
-document.addEventListener('click', function (e) {
-  adShowHide(e);
-});
-
+document.addEventListener('click', adShowHide);
 mapPinMain.addEventListener('mouseup', makeMapActive);
 resetButton.addEventListener('click', makeMapInactive);
