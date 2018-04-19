@@ -254,11 +254,11 @@ var makeMapInactive = function () {
 var adShowHide = function (clikedElem) {
   if (clikedElem.target.classList.contains('pin')) {
     showCurrentAd(clikedElem.target, ads);
+    addressField.setAttribute('value', clikedElem.clientX + ',' + clikedElem.clientY);
   }
   if (clikedElem.target.classList.contains('popup__close')) {
     closeAd();
   }
-  addressField.setAttribute('value', clikedElem.clientX + ',' + clikedElem.clientY);
 };
 
 // синхронизация типа жилья и цены за ночь
