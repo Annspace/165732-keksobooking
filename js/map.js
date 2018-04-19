@@ -254,7 +254,11 @@ var makeMapInactive = function () {
 var adShowHide = function (clikedElem) {
   if (clikedElem.target.classList.contains('pin')) {
     showCurrentAd(clikedElem.target, ads);
-    addressField.setAttribute('value', clikedElem.clientX + ',' + clikedElem.clientY);
+    var leftCoords = clikedElem.target.parentNode.style.left;
+    var topCoords = clikedElem.target.parentNode.style.top;
+    var slicedLeft = leftCoords.substring(0, leftCoords.length - 2);
+    var slicedTop = topCoords.substring(0, topCoords.length - 2);
+    addressField.setAttribute('value', slicedLeft + ',' + slicedTop);
   }
   if (clikedElem.target.classList.contains('popup__close')) {
     closeAd();
