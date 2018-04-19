@@ -72,10 +72,7 @@ var random = function (array) {
 
 // случайная обрезка
 var generateFeatures = function (array) {
-  var newArray = [];
-  for (var i = 0; i <= random(array); i++) {
-    newArray.push(FEATURES[i]);
-  }
+  var newArray = array.slice(random(array));
   return newArray;
 };
 
