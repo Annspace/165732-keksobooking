@@ -1107,7 +1107,7 @@ fieldset {
 }
 
 .popup__feature {
-  display: inline-block;
+  display: none;
   overflow: hidden;
 
   width: 30px;
