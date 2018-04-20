@@ -15,6 +15,8 @@ var START_Y = 401;
 var NUMBER_PINS = 8;
 var NUMBER_ADS = 8;
 var LENGTH_OF_NAME = 10;
+var PIN_EDGE_TOP = 70;
+var PIN_EDGE_LEFT = 25;
 var ads = [];
 var avatars = [];
 
@@ -243,8 +245,8 @@ var adShowHide = function (e) {
     showCurrentAd(e.target, ads);
     var leftCoords = e.target.parentNode.style.left;
     var topCoords = e.target.parentNode.style.top;
-    var slicedLeft = leftCoords.substring(0, leftCoords.length - 2);
-    var slicedTop = topCoords.substring(0, topCoords.length - 2);
+    var slicedLeft = Number(leftCoords.substring(0, leftCoords.length - 2)) + PIN_EDGE_LEFT;
+    var slicedTop = Number(topCoords.substring(0, topCoords.length - 2)) + PIN_EDGE_TOP;
     addressField.setAttribute('value', slicedLeft + ',' + slicedTop);
   }
   if (e.target.classList.contains('popup__close')) {
