@@ -211,8 +211,7 @@ var closeAd = function () {
   mapCardPopup.classList.add('hidden');
 };
 
-var makeMapInactive = function (e) {
-  e = e || 1; // возможность вызова без параметров
+var makeMapInactive = function () {
   var fields = document.querySelectorAll('fieldset');
   var adForm = document.querySelector('.ad-form');
   var addressField = document.getElementById('address');
