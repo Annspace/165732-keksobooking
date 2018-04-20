@@ -216,24 +216,22 @@ var makeMapInactive = function (e) {
   var fields = document.querySelectorAll('fieldset');
   var adForm = document.querySelector('.ad-form');
   var addressField = document.getElementById('address');
-  if (e === 1 || e.target.classList.contains('ad-form__reset')) {
-    for (var i = 0; i < fields.length; i++) {
-      fields[i].disabled = true;
-    }
-    var map = document.querySelector('.map');
-    map.classList.add('map--faded');
-    adForm.classList.add('ad-form--disabled');
-    adForm.reset();
-    if (document.querySelector('.map__card')) {
-      document.querySelector('.map__card').style.display = 'none';
-    }
-    addressField.setAttribute('value', START_X + ',' + START_Y);
-    var mapPins = document.querySelectorAll('.map__pin');
-    for (i = 0; i < mapPins.length; i++) {
-      mapPins[i].style.display = 'none';
-      if (mapPins[i].classList.contains('map__pin--main')) {
-        mapPins[i].style.display = 'block';
-      }
+  for (var i = 0; i < fields.length; i++) {
+    fields[i].disabled = true;
+  }
+  var map = document.querySelector('.map');
+  map.classList.add('map--faded');
+  adForm.classList.add('ad-form--disabled');
+  adForm.reset();
+  if (document.querySelector('.map__card')) {
+    document.querySelector('.map__card').style.display = 'none';
+  }
+  addressField.setAttribute('value', START_X + ',' + START_Y);
+  var mapPins = document.querySelectorAll('.map__pin');
+  for (i = 0; i < mapPins.length; i++) {
+    mapPins[i].style.display = 'none';
+    if (mapPins[i].classList.contains('map__pin--main')) {
+      mapPins[i].style.display = 'block';
     }
   }
 };
@@ -241,17 +239,13 @@ var makeMapInactive = function (e) {
 // функции для обработчиков
 var adShowHide = function (e) {
   var addressField = document.getElementById('address');
-  if (e.target.classList.contains('pin')) {
-    showCurrentAd(e.target, ads);
-    var leftCoords = e.target.parentNode.style.left;
-    var topCoords = e.target.parentNode.style.top;
-    var slicedLeft = Number(leftCoords.substring(0, leftCoords.length - 2)) + PIN_EDGE_LEFT;
-    var slicedTop = Number(topCoords.substring(0, topCoords.length - 2)) + PIN_EDGE_TOP;
-    addressField.setAttribute('value', slicedLeft + ',' + slicedTop);
-  }
-  if (e.target.classList.contains('popup__close')) {
-    closeAd();
-  }
+  showCurrentAd(e.target, ads);
+  var leftCoords = e.target.parentNode.style.left;
+  var topCoords = e.target.parentNode.style.top;
+  var slicedLeft = Number(leftCoords.substring(0, leftCoords.length - 2)) + PIN_EDGE_LEFT;
+  var slicedTop = Number(topCoords.substring(0, topCoords.length - 2)) + PIN_EDGE_TOP;
+  addressField.setAttribute('value', slicedLeft + ',' + slicedTop);
+
 };
 
 // синхронизация типа жилья и цены за ночь
@@ -293,6 +287,17 @@ var compareRoomsGuests = function (capVal, roomVal) {
   }
 };
 
+var clickHandler = function (e) {
+  var clickedElem = e.target;
+  if (clickedElem.classList.contains('pin')) {
+    adShowHide(e);
+  } else if (clickedElem.classList.contains('ad-form__reset')) {
+    makeMapInactive(e);
+  } else if (clickedElem.classList.contains('popup__close')) {
+    closeAd();
+  }
+};
+
 // синхронизация времени отъезда/приезда
 var timeInOut = function (timeVal) {
   var timeIn = document.getElementById('timein');
@@ -307,8 +312,6 @@ var synchronizeFields = function (e) {
   var type = document.getElementById('type');
   var timeIn = document.getElementById('timein');
   var timeOut = document.getElementById('timeout');
-
-  compareRoomsGuests(Number(capacity.value), Number(room.value));
   switch (e.target) {
     case capacity:
       compareRoomsGuests(Number(e.target.value), Number(room.value));
@@ -332,7 +335,7 @@ var synchronizeFields = function (e) {
 makeMapInactive();
 
 // Обработчики событий
-document.addEventListener('click', adShowHide);
 document.querySelector('.map__pin--main').addEventListener('mouseup', makeMapActive);
-document.addEventListener('click', makeMapInactive);
+// Вызываемая функция подхватывает target и в зависимости от него запускает другие фунцкии
+document.addEventListener('click', clickHandler);
 document.addEventListener('change', synchronizeFields);
