@@ -4,12 +4,12 @@
 var TITLES = ['Большая уютная квартира', 'Маленькая неуютная квартира', 'Огромный прекрасный дворец',
   'Маленький ужасный дворец', 'Красивый гостевой домик', 'Некрасивый негостеприимный домик',
   'Уютное бунгало далеко от моря', 'Неуютное бунгало по колено в воде'];
-var TYPES = ['flat', 'palace', 'house', 'bungalo', 'palace', 'flat', 'house', 'bungalo'];
+var TYPES = ['flat', 'palace', 'house', 'bungalo'];
 var PHOTOS = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg',
   'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
 var FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
-var CHECKINS = ['12:00', '13:00', '14:00', '12:00', '13:00', '14:00', '12:00', '13:00'];
-var CHECKOUTS = ['13:00', '12:00', '14:00', '13:00', '12:00', '14:00', '13:00', '13:00'];
+var CHECKINS = ['12:00', '13:00', '14:00'];
+var CHECKOUTS = ['12:00', '13:00', '14:00'];
 var START_X = 601;
 var START_Y = 401;
 var NUMBER_PINS = 8;
@@ -17,6 +17,11 @@ var NUMBER_ADS = 8;
 var LENGTH_OF_NAME = 10;
 var PIN_EDGE_TOP = 70;
 var PIN_EDGE_LEFT = 25;
+var TYPES_INFO = {flat: {price: 1000, translation: 'Квартира'},
+  house: {price: 5000, translation: 'Дом'},
+  bungalo: {price: 0, translation: 'Бунгало'},
+  palace: {price: 10000, translation: 'Бунгало'}
+};
 var ads = [];
 var avatars = [];
 
@@ -60,43 +65,41 @@ var cutArrayRandom = function (array) {
   return newArray;
 };
 
-// возвращает сгенерированный массив из восьми объектов
-var createObjects = function () {
+
+var createObjects = function (i) {
   var temp = [];
-  for (var i = 0; i < NUMBER_ADS; i++) {
-    temp[i] = {
-      'author': {
-        'avatar': 'img/avatars/user' + '0' + (i + 1) + '.png'
-      },
+  temp[i] = {
+    'author': {
+      'avatar': 'img/avatars/user' + '0' + (i + 1) + '.png'
+    },
 
-      'location': {
-        'x': randomInteger(300, 901),
-        'y': randomInteger(150, 500)
-      },
+    'location': {
+      'x': randomInteger(300, 901),
+      'y': randomInteger(150, 500)
+    },
 
-      'offer': {
-        'title': TITLES[i],
-        'address': '',
-        'price': randomInteger(1000, 1000000),
-        'type': TYPES[i],
-        'rooms': randomInteger(1, 5),
-        'guests': randomInteger(1, 5),
-        'checkin': CHECKINS[i],
-        'checkout': CHECKOUTS[i],
-        'features': cutArrayRandom(FEATURES),
-        'description': '',
-        'photos': shuffle(PHOTOS)
-      }
+    'offer': {
+      'title': TITLES[i],
+      'address': '',
+      'price': randomInteger(1000, 1000000),
+      'type': TYPES[randomInteger(0, 3)],
+      'rooms': randomInteger(1, 5),
+      'guests': randomInteger(1, 5),
+      'checkin': CHECKINS[randomInteger(0, 2)],
+      'checkout': CHECKOUTS[randomInteger(0, 2)],
+      'features': cutArrayRandom(FEATURES),
+      'description': '',
+      'photos': shuffle(PHOTOS)
+    }
 
-    };
-  }
-  return temp;
+  };
+  return temp[i];
 };
 
 // добавляем объекты в массив ads
 var generateAds = function () {
   for (var i = 0; i < NUMBER_ADS; i++) {
-    ads.push(createObjects()[i]);
+    ads.push(createObjects(i));
   }
 };
 
@@ -112,6 +115,24 @@ var renderPin = function (ad) {
   return MapPinElement;
 };
 
+var renderPhotos = function (MapAdElement, ad) {
+  MapAdElement.querySelector('.popup__photo').src = ad.offer.photos[0];
+  var image = MapAdElement.querySelector('.popup__photo');
+  for (var i = 1; i < ad.offer.photos.length; i++) {
+    var PhotoElement = image.cloneNode(true);
+    MapAdElement.querySelector('.popup__photos').appendChild(PhotoElement);
+    image.src = ad.offer.photos[i];
+  }
+};
+
+var renderFeatures = function (MapAdElement, ad) {
+  var featuresElements = MapAdElement.querySelectorAll('.popup__feature');
+  for (var i = 0; i < ad.offer.features.length; i++) {
+    featuresElements[i].style.display = 'inline-block';
+  }
+};
+
+
 var renderAd = function (ad) {
   var MapTemplate = document.querySelector('template').content;
   var MapAdTemplate = MapTemplate.querySelector('article');
@@ -126,33 +147,12 @@ var renderAd = function (ad) {
     + ad.offer.checkin + ' ' + 'Выезд до' + ' ' + ad.offer.checkout;
   MapAdElement.querySelector('.popup__avatar').alt = ad.author.avatar;
   MapAdElement.querySelector('.popup__avatar').src = ad.author.avatar;
-  MapAdElement.querySelector('.popup__photo').src = ad.offer.photos[0];
 
   var typeElement = MapAdElement.querySelector('.popup__type');
+  typeElement.textContent = TYPES_INFO[ad.offer.type].translation;
 
-  switch (ad.offer.type) {
-    case 'flat':
-      typeElement.textContent = 'Квартира';
-      break;
-    case 'bungalo':
-      typeElement.textContent = 'Бунгало';
-      break;
-    case 'house':
-      typeElement.textContent = 'Дом';
-      break;
-  }
-
-  var image = MapAdElement.querySelector('.popup__photo');
-  for (var i = 1; i < ad.offer.photos.length; i++) {
-    var PhotoElement = image.cloneNode(true);
-    MapAdElement.querySelector('.popup__photos').appendChild(PhotoElement);
-    image.src = ad.offer.photos[i];
-  }
-  var featuresElements = MapAdElement.querySelectorAll('.popup__feature');
-
-  for (i = 0; i < ad.offer.features.length; i++) {
-    featuresElements[i].style.display = 'inline-block';
-  }
+  renderPhotos(MapAdElement, ad);
+  renderFeatures(MapAdElement, ad);
 
   return MapAdElement;
 };
@@ -250,24 +250,8 @@ var adShowHide = function (e) {
 // синхронизация типа жилья и цены за ночь
 var compareTypePrice = function (type) {
   var priceElem = document.getElementById('price');
-  switch (type) {
-    case 'bungalo':
-      priceElem.placeholder = 0;
-      priceElem.min = 0;
-      break;
-    case 'flat':
-      priceElem.placeholder = 1000;
-      priceElem.min = 1000;
-      break;
-    case 'house':
-      priceElem.placeholder = 5000;
-      priceElem.min = 5000;
-      break;
-    case 'palace':
-      priceElem.placeholder = 10000;
-      priceElem.min = 10000;
-      break;
-  }
+  priceElem.placeholder = TYPES_INFO[type].price;
+  priceElem.min = TYPES_INFO[type].price;
 };
 
 // синхронизация числа гостей и комнат
