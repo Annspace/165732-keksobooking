@@ -127,8 +127,16 @@ var renderPhotos = function (MapAdElement, ad) {
 
 var renderFeatures = function (MapAdElement, ad) {
   var featuresElements = MapAdElement.querySelectorAll('.popup__feature');
-  for (var i = 0; i < ad.offer.features.length; i++) {
-    featuresElements[i].style.display = 'inline-block';
+  var z = MapAdElement.querySelector('.popup__features');
+  for (var i = 0; i < featuresElements.length; i++) {
+    featuresElements[i].remove();
+  }
+  var featuresList = [];
+  for (i = 0; i < ad.offer.features.length; i++) {
+    featuresList[i] = document.createElement('li');
+    featuresList[i].classList.add('popup__feature');
+    featuresList[i].classList.add('popup__feature--' + ad.offer.features[i]);
+    z.appendChild(featuresList[i]);
   }
 };
 

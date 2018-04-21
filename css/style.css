@@ -1103,11 +1103,12 @@ fieldset {
 }
 
 .popup__features {
+  display: flex;
   margin-bottom: 10px;
 }
 
 .popup__feature {
-  display: none;
+
   overflow: hidden;
 
   width: 30px;
