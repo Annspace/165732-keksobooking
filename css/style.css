@@ -1106,11 +1106,12 @@ input:invalid {
 }
 
 .popup__features {
+  display: flex;
   margin-bottom: 10px;
 }
 
 .popup__feature {
-  display: inline-block;
+
   overflow: hidden;
 
   width: 30px;
