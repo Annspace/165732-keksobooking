@@ -22,6 +22,9 @@ var TYPES_INFO = {flat: {price: 1000, translation: 'Квартира'},
   bungalo: {price: 0, translation: 'Бунгало'},
   palace: {price: 10000, translation: 'Бунгало'}
 };
+var PIN_MAIN_HEIGHT = 80; // поправка на острый конец
+var PIN_MAIN_WIDTH = 62; // поправка на острый конец
+var PX = 2;
 var ads = [];
 var avatars = [];
 
@@ -30,7 +33,7 @@ var avatars = [];
 
 // Перемешивание
 var shuffle = function (array) {
-  var tempArray = array.slice(0);
+  var tempArray = array.slice(0); // передача массива происходит по ссылке, а не по значению, поэтому создаём копию
   var counter = tempArray.length;
 
   // While there are elements in the array
@@ -61,7 +64,7 @@ var randomInteger = function (min, max) {
 
 // случайная обрезка
 var cutArrayRandom = function (array) {
-  var newArray = array.slice(randomInteger(0, array.length));
+  var newArray = array.slice(randomInteger(0, array.length)); // передача массива происходит по ссылке, а не по значению, поэтому создаём копию
   return newArray;
 };
 
@@ -127,16 +130,16 @@ var renderPhotos = function (MapAdElement, ad) {
 
 var renderFeatures = function (MapAdElement, ad) {
   var featuresElements = MapAdElement.querySelectorAll('.popup__feature');
-  var z = MapAdElement.querySelector('.popup__features');
+  var featuresUl = MapAdElement.querySelector('.popup__features');
   for (var i = 0; i < featuresElements.length; i++) {
     featuresElements[i].remove();
   }
-  var featuresList = [];
+  var featuresLi = [];
   for (i = 0; i < ad.offer.features.length; i++) {
-    featuresList[i] = document.createElement('li');
-    featuresList[i].classList.add('popup__feature');
-    featuresList[i].classList.add('popup__feature--' + ad.offer.features[i]);
-    z.appendChild(featuresList[i]);
+    featuresLi[i] = document.createElement('li');
+    featuresLi[i].classList.add('popup__feature');
+    featuresLi[i].classList.add('popup__feature--' + ad.offer.features[i]);
+    featuresUl.appendChild(featuresLi[i]);
   }
 };
 
@@ -176,7 +179,7 @@ var fillPins = function () {
 
 
 var makeMapActive = function () {
-  var map = document.querySelector('.map');
+
   var fields = document.querySelectorAll('fieldset');
   var adForm = document.querySelector('.ad-form');
   generateAds();
@@ -222,11 +225,9 @@ var closeAd = function () {
 var makeMapInactive = function () {
   var fields = document.querySelectorAll('fieldset');
   var adForm = document.querySelector('.ad-form');
-  var addressField = document.getElementById('address');
   for (var i = 0; i < fields.length; i++) {
     fields[i].disabled = true;
   }
-  var map = document.querySelector('.map');
   map.classList.add('map--faded');
   adForm.classList.add('ad-form--disabled');
   adForm.reset();
@@ -244,15 +245,20 @@ var makeMapInactive = function () {
 };
 
 // функции для обработчиков
-var adShowHide = function (e) {
-  var addressField = document.getElementById('address');
-  showCurrentAd(e.target, ads);
-  var leftCoords = e.target.parentNode.style.left;
-  var topCoords = e.target.parentNode.style.top;
-  var slicedLeft = Number(leftCoords.substring(0, leftCoords.length - 2)) + PIN_EDGE_LEFT;
-  var slicedTop = Number(topCoords.substring(0, topCoords.length - 2)) + PIN_EDGE_TOP;
-  addressField.setAttribute('value', slicedLeft + ',' + slicedTop);
 
+var setAddressField = function (pin) {
+  var leftCoords = pin.style.left;
+  var topCoords = pin.style.top;
+  // поправка на острый конец
+  var slicedLeft = Number(leftCoords.substring(0, leftCoords.length - PX)) + PIN_EDGE_LEFT;
+  var slicedTop = Number(topCoords.substring(0, topCoords.length - PX)) + PIN_EDGE_TOP;
+  addressField.setAttribute('value', slicedLeft + ',' + slicedTop);
+};
+
+var adShowHide = function (e) {
+  showCurrentAd(e.target, ads);
+  var buttonPin = e.target.parentNode;
+  setAddressField(buttonPin);
 };
 
 // синхронизация типа жилья и цены за ночь
@@ -321,12 +327,72 @@ var synchronizeFields = function (e) {
       break;
   }
 };
+// если карта неактивна, то вызываем первую, если активна, то вторую
+var mouseUpHandler = function () {
+  if (map.classList.contains('map--faded')) {
+    makeMapActive();
+  } else {
+    setAddressField(pinMain);
+  }
+};
 
+var dragAndDrop = function (evt) {
+  evt.preventDefault();
+
+  var startCoords = {
+    x: evt.clientX,
+    y: evt.clientY
+  };
+
+  var onMouseMove = function (moveEvt) {
+    moveEvt.preventDefault();
+
+    var shift = {
+      x: startCoords.x - moveEvt.clientX,
+      y: startCoords.y - moveEvt.clientY
+    };
+
+    startCoords = {
+      x: moveEvt.clientX,
+      y: moveEvt.clientY
+    }; // для более частой перерисовки (16 fps) гладкое взаимодействие
+
+    var top = pinMain.offsetTop - shift.y;
+    var left = pinMain.offsetLeft - shift.x;
+    var mapHeight = map.offsetHeight;
+    var mapWidth = map.offsetWidth;
+
+    if (top > 0 && top < (mapHeight - PIN_MAIN_HEIGHT) && left > 0 && left < (mapWidth - PIN_MAIN_WIDTH)) {
+      pinMain.style.top = top + 'px';
+      pinMain.style.left = left + 'px';
+      setAddressField(pinMain);
+    }
+  };
+
+  var onMouseUp = function (upEvt) {
+    upEvt.preventDefault();
+
+    document.removeEventListener('mousemove', onMouseMove); // на документ, а не на pinMain, т.к можно дернуть мышью за пределы pinMain
+    document.removeEventListener('mouseup', onMouseUp);
+  };
+
+  document.addEventListener('mousemove', onMouseMove);
+  document.addEventListener('mouseup', onMouseUp);
+};
+
+// переменные, которые используются в нескольких функциях
+var addressField = document.getElementById('address');
+var map = document.querySelector('.map');
 // Неактивность в момент открытия
 makeMapInactive();
 
 // Обработчики событий
-document.querySelector('.map__pin--main').addEventListener('mouseup', makeMapActive);
+
 // Вызываемая функция подхватывает target и в зависимости от него запускает другие фунцкии
 document.addEventListener('click', clickHandler);
 document.addEventListener('change', synchronizeFields);
+
+var pinMain = document.querySelector('.map__pin--main');
+
+pinMain.addEventListener('mouseup', mouseUpHandler);
+pinMain.addEventListener('mousedown', dragAndDrop);
