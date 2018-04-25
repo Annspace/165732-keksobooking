@@ -22,10 +22,8 @@ var TYPES_INFO = {flat: {price: 1000, translation: 'Квартира'},
   bungalo: {price: 0, translation: 'Бунгало'},
   palace: {price: 10000, translation: 'Бунгало'}
 };
-var MAP_WIDTH = 1200;
-var MAP_HEIGHT = 704;
-var PIN_MAIN_HEIGHT = 80;
-var PIN_MAIN_WIDTH = 62;
+var PIN_MAIN_HEIGHT = 80; // поправка на острый конец
+var PIN_MAIN_WIDTH = 62;  // поправка на острый конец
 var PX = 2;
 var ads = [];
 var avatars = [];
@@ -181,7 +179,7 @@ var fillPins = function () {
 
 
 var makeMapActive = function () {
-  var map = document.querySelector('.map');
+
   var fields = document.querySelectorAll('fieldset');
   var adForm = document.querySelector('.ad-form');
   generateAds();
@@ -227,11 +225,9 @@ var closeAd = function () {
 var makeMapInactive = function () {
   var fields = document.querySelectorAll('fieldset');
   var adForm = document.querySelector('.ad-form');
-  var addressField = document.getElementById('address');
   for (var i = 0; i < fields.length; i++) {
     fields[i].disabled = true;
   }
-  var map = document.querySelector('.map');
   map.classList.add('map--faded');
   adForm.classList.add('ad-form--disabled');
   adForm.reset();
@@ -251,7 +247,6 @@ var makeMapInactive = function () {
 // функции для обработчиков
 
 var setAddressField = function (pin) {
-  var addressField = document.getElementById('address');
   var leftCoords = pin.style.left;
   var topCoords = pin.style.top;
   // поправка на острый конец
@@ -332,16 +327,13 @@ var synchronizeFields = function (e) {
       break;
   }
 };
-// если неактивна, то вызываем первую, если активна, то вторую
+// если карта неактивна, то вызываем первую, если активна, то вторую
 var mouseUpHandler = function () {
-  var map = document.querySelector('.map');
-  var pinMain = document.querySelector('.map__pin--main');
   if (map.classList.contains('map--faded')) {
     makeMapActive();
   } else {
     setAddressField(pinMain);
   }
-
 };
 
 var dragAndDrop = function (evt) {
@@ -367,8 +359,10 @@ var dragAndDrop = function (evt) {
 
     var top = pinMain.offsetTop - shift.y;
     var left = pinMain.offsetLeft - shift.x;
+    var mapHeight = map.offsetHeight;
+    var mapWidth = map.offsetWidth;
 
-    if (top > 0 && top < (MAP_HEIGHT - PIN_MAIN_HEIGHT) && left > 0 && left < (MAP_WIDTH - PIN_MAIN_WIDTH)) {
+    if (top > 0 && top < (mapHeight - PIN_MAIN_HEIGHT) && left > 0 && left < (mapWidth - PIN_MAIN_WIDTH)) {
       pinMain.style.top = top + 'px';
       pinMain.style.left = left + 'px';
       setAddressField(pinMain);
@@ -386,6 +380,9 @@ var dragAndDrop = function (evt) {
   document.addEventListener('mouseup', onMouseUp);
 };
 
+// переменные, которые используются в нескольких функциях
+var addressField = document.getElementById('address');
+var map = document.querySelector('.map');
 // Неактивность в момент открытия
 makeMapInactive();
 
