@@ -23,7 +23,7 @@ var TYPES_INFO = {flat: {price: 1000, translation: 'Квартира'},
   palace: {price: 10000, translation: 'Бунгало'}
 };
 var PIN_MAIN_HEIGHT = 80; // поправка на острый конец
-var PIN_MAIN_WIDTH = 62;  // поправка на острый конец
+var PIN_MAIN_WIDTH = 62; // поправка на острый конец
 var PX = 2;
 var ads = [];
 var avatars = [];
