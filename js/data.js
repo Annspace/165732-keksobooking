@@ -1,6 +1,6 @@
 'use strict';
 
-(function () {
+window.data = (function () {
 // Перемешивание
   var shuffle = function (array) {
     var tempArray = array.slice(0); // передача массива происходит по ссылке, а не по значению, поэтому создаём копию
@@ -68,10 +68,13 @@
     };
     return temp[i];
   };
-  // добавляем объекты в массив ads
-  window.generateAds = function () {
-    for (var i = 0; i < window.globals.NUMBER_ADS; i++) {
-      window.globals.ads.push(createObjects(i));
+  return {
+    // добавляем объекты в массив ads
+    generateAds: function () {
+      for (var i = 0; i < window.globals.NUMBER_ADS; i++) {
+        window.globals.ads.push(createObjects(i));
+      }
     }
   };
+
 })();

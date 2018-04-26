@@ -1,6 +1,6 @@
 'use strict';
 
-(function () {
+window.pin = (function () {
   var renderPin = function (ad) {
     var MapButtonTemplate = window.globals.template.querySelectorAll('button')[1];
     var MapPinElement = MapButtonTemplate.cloneNode(true);
@@ -12,13 +12,13 @@
     return MapPinElement;
   };
 
-  window.fillPins = function () {
-    var fragment = document.createDocumentFragment();
-    for (var i = 0; i < window.globals.NUMBER_PINS; i++) {
-      fragment.appendChild(renderPin(window.globals.ads[i]));
+  return {
+    fillPins: function () {
+      var fragment = document.createDocumentFragment();
+      for (var i = 0; i < window.globals.NUMBER_PINS; i++) {
+        fragment.appendChild(renderPin(window.globals.ads[i]));
+      }
+      document.querySelector('.map__pins').appendChild(fragment);
     }
-    document.querySelector('.map__pins').appendChild(fragment);
   };
 })();
-
-

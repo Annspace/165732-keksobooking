@@ -1,11 +1,11 @@
 'use strict';
 
-(function () {
+window.map = (function () {
   var makeMapActive = function () {
     var fields = document.querySelectorAll('fieldset');
     var adForm = document.querySelector('.ad-form');
-    window.generateAds();
-    window.fillPins();
+    window.data.generateAds();
+    window.pin.fillPins();
     for (var i = 0; i < fields.length; i++) {
       fields[i].disabled = false;
     }
@@ -28,11 +28,11 @@
       if (slicedAdAvatar === slicedCurrentPin) {
         if (document.querySelector('.map__card')) {
           var mapCardPopup = document.querySelector('.map__card');
-          mapCardPopup.parentNode.replaceChild(window.renderAd(window.globals.ads[i]), mapCardPopup);
+          mapCardPopup.parentNode.replaceChild(window.card.renderAd(window.globals.ads[i]), mapCardPopup);
           break;
         } else {
           var mapFilters = document.querySelector('.map__filters-container');
-          mapFilters.parentNode.appendChild(window.renderAd(window.globals.ads[i]));
+          mapFilters.parentNode.appendChild(window.card.renderAd(window.globals.ads[i]));
           break;
         }
       }
@@ -150,4 +150,3 @@
   window.globals.pinMain.addEventListener('mouseup', mouseUpHandler);
   window.globals.pinMain.addEventListener('mousedown', dragAndDrop);
 })();
-
