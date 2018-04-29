@@ -38,6 +38,7 @@ window.card = (function () {
         + 'комнаты для' + ' ' + ad['offer']['guests'] + ' ' + 'гостей';
       MapAdElement.querySelector('.popup__text--time').textContent = 'Заезд после' + ' '
         + ad.offer.checkin + ' ' + 'Выезд до' + ' ' + ad.offer.checkout;
+      MapAdElement.querySelector('.popup__description').textContent = ad.offer.description;
       MapAdElement.querySelector('.popup__avatar').alt = ad.author.avatar;
       MapAdElement.querySelector('.popup__avatar').src = ad.author.avatar;
 

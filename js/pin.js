@@ -5,7 +5,7 @@ window.pin = (function () {
     var MapButtonTemplate = window.globals.template.querySelectorAll('button')[1];
     var MapPinElement = MapButtonTemplate.cloneNode(true);
     MapPinElement.style = 'left:' + ad.location.x + 'px; top:'
-      + ad['location']['y'] + 'px;';
+      + ad.location.y + 'px;';
     MapPinElement.querySelector('img').src = ad.author.avatar;
     MapPinElement.querySelector('img').alt = ad.offer.title;
 
@@ -13,10 +13,10 @@ window.pin = (function () {
   };
 
   return {
-    fillPins: function () {
+    fillPins: function (data) {
       var fragment = document.createDocumentFragment();
-      for (var i = 0; i < window.globals.NUMBER_PINS; i++) {
-        fragment.appendChild(renderPin(window.globals.ads[i]));
+      for (var i = 0; i < data.length; i++) {
+        fragment.appendChild(renderPin(data[i]));
       }
       document.querySelector('.map__pins').appendChild(fragment);
     }

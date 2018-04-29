@@ -4,28 +4,36 @@ window.map = (function () {
   var makeMapActive = function () {
     var fields = document.querySelectorAll('fieldset');
     var adForm = document.querySelector('.ad-form');
-    window.data.generateAds();
-    window.pin.fillPins();
     for (var i = 0; i < fields.length; i++) {
       fields[i].disabled = false;
     }
     window.globals.map.classList.remove('map--faded');
     adForm.classList.remove('ad-form--disabled');
+
+    var onError = function (message) {
+      console.error(message);
+    };
+
+    var onLoad = function (data) {
+      window.pin.fillPins(data);
+      for (i = 0; i < data.length; i++) {
+        window.globals.ads.push(data[i]);
+      }
+    };
+    window.backend.load(onLoad, onError);
   };
 
 
-  // Метки и картинки связаны через src картинок
-  // Обрезаем src картинки до img/avatars/user*.png , ищем такой же src у картинок
-  // из набора ads, если нашли картинки с одинаковыми src, то добавляем соответствующий ad в DOM
-  // в первый раз просто добавляем ad, последующие разы заменяем уже добавленный
-  // отрезаем с конца (последние 10 символов)
+  // Метки и объявления связаны через координаты
+  // если нашли метки и объявления с одинаковыми координатами, то добавляем соответствующее объявление в DOM
+  // в первый раз просто добавляем объявление, последующие разы заменяем уже добавленное
 
   var showCurrentAd = function (currentPin, adsArray) {
-    var slicedCurrentPin = currentPin.src.substring(currentPin.src.length - window.globals.LENGTH_OF_NAME, currentPin.src.length);
+    var slicedPinLocationY = Number(currentPin.parentNode.style.top.substring(0, currentPin.parentNode.style.top.length - window.globals.PX));
+    var slicedPinLocationX = Number(currentPin.parentNode.style.left.substring(0, currentPin.parentNode.style.left.length - window.globals.PX));
+
     for (var i = 0; i < adsArray.length; i++) {
-      window.globals.avatars[i] = adsArray[i]['author']['avatar'];
-      var slicedAdAvatar = window.globals.avatars[i].substring(window.globals.avatars[i].length - window.globals.LENGTH_OF_NAME, window.globals.avatars[i].length);
-      if (slicedAdAvatar === slicedCurrentPin) {
+      if (adsArray[i].location.y === slicedPinLocationY && adsArray[i].location.x === slicedPinLocationX) {
         if (document.querySelector('.map__card')) {
           var mapCardPopup = document.querySelector('.map__card');
           mapCardPopup.parentNode.replaceChild(window.card.renderAd(window.globals.ads[i]), mapCardPopup);
@@ -149,4 +157,6 @@ window.map = (function () {
   document.addEventListener('change', window.form.synchronizeFields);
   window.globals.pinMain.addEventListener('mouseup', mouseUpHandler);
   window.globals.pinMain.addEventListener('mousedown', dragAndDrop);
+
+
 })();
