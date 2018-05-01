@@ -31,6 +31,7 @@ window.globals = (function () {
     template: document.querySelector('template').content,
     addressField: document.getElementById('address'),
     map: document.querySelector('.map'),
-    pinMain: document.querySelector('.map__pin--main')
+    pinMain: document.querySelector('.map__pin--main'),
+    form: document.querySelector('.ad-form')
   };
 })();

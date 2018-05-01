@@ -13,7 +13,7 @@ window.form = (function () {
     var capacity = document.getElementById('capacity');
     if (capVal !== 1 && roomVal === 1) {
       capacity.setCustomValidity('Для 1 гостя');
-    } else if (capVal === (3 || 0) && roomVal === 2) {
+    } else if ((capVal === 0 || capVal === 3) && roomVal === 2) {
       capacity.setCustomValidity('Для 2 гостей или 1 гостя');
     } else if (capVal === 0 && roomVal === 3) {
       capacity.setCustomValidity('для 3 гостей, для 2 гостей или для 1 гостя');
@@ -29,6 +29,37 @@ window.form = (function () {
     var timeOut = document.getElementById('timeout');
     timeIn.value = timeVal;
     timeOut.value = timeVal;
+  };
+
+  var onError = function (error) {
+    switch (error) {
+      case 400:
+        error = 'Вводишь неверный запрос';
+        break;
+      case 401:
+        error = 'Пользователь-то не авторизован';
+        break;
+      case 404:
+        error = 'Сорри, ничего не найдено';
+        break;
+      case 500:
+        error = 'На сервере какая-то ошибочка';
+        break;
+      default:
+        error = 'Cтатус ответа: : ' + error;
+    }
+    var node = document.createElement('div');
+    node.style = 'z-index: 100; margin: 0 auto; text-align: center; color: white; background-color: red;';
+    node.style.position = 'absolute';
+    node.style.left = 0;
+    node.style.right = 0;
+    node.style.fontSize = '30px';
+    node.textContent = error;
+    node.classList.add('error');
+    document.body.insertAdjacentElement('afterbegin', node);
+    setTimeout(function () {
+      document.querySelector('.error').classList.add('hidden');
+    }, 4000);
   };
 
   return {
@@ -64,6 +95,28 @@ window.form = (function () {
           timeInOut(e.target.value);
           break;
       }
+    },
+
+    receiveData: function () {
+      var onLoad = function (data) {
+        window.pin.fillPins(data);
+        for (var i = 0; i < data.length; i++) {
+          window.globals.ads.push(data[i]);
+        }
+      };
+      window.backend.load(onLoad, onError);
+    },
+
+    sendData: function (evt) {
+      evt.preventDefault();
+      var FD = new FormData(window.globals.form);
+      var data = FD;
+
+      var onLoad = function (message) {
+        window.globals.form.reset();
+        console.log('Данные ' + message + ' отправлены');
+      };
+      window.backend.send(data, onLoad, onError);
     }
   };
 })();

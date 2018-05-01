@@ -9,18 +9,7 @@ window.map = (function () {
     }
     window.globals.map.classList.remove('map--faded');
     adForm.classList.remove('ad-form--disabled');
-
-    var onError = function (message) {
-      console.error(message);
-    };
-
-    var onLoad = function (data) {
-      window.pin.fillPins(data);
-      for (i = 0; i < data.length; i++) {
-        window.globals.ads.push(data[i]);
-      }
-    };
-    window.backend.load(onLoad, onError);
+    window.form.receiveData();
   };
 
 
@@ -54,13 +43,12 @@ window.map = (function () {
 
   var makeMapInactive = function () {
     var fields = document.querySelectorAll('fieldset');
-    var adForm = document.querySelector('.ad-form');
     for (var i = 0; i < fields.length; i++) {
       fields[i].disabled = true;
     }
     window.globals.map.classList.add('map--faded');
-    adForm.classList.add('ad-form--disabled');
-    adForm.reset();
+    window.globals.form.classList.add('ad-form--disabled');
+    window.globals.form.reset();
     if (document.querySelector('.map__card')) {
       document.querySelector('.map__card').style.display = 'none';
     }
@@ -155,8 +143,9 @@ window.map = (function () {
   // Вызываемая функция подхватывает target и в зависимости от него запускает другие фунцкии
   document.addEventListener('click', clickHandler);
   document.addEventListener('change', window.form.synchronizeFields);
+  // на случай если пользователь просто щелкнул по главной метке (без перетаскивания)
   window.globals.pinMain.addEventListener('mouseup', mouseUpHandler);
   window.globals.pinMain.addEventListener('mousedown', dragAndDrop);
-
+  window.globals.form.addEventListener('submit', window.form.sendData);
 
 })();
