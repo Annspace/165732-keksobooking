@@ -112,9 +112,8 @@ window.form = (function () {
       var FD = new FormData(window.globals.form);
       var data = FD;
 
-      var onLoad = function (message) {
+      var onLoad = function () {
         window.globals.form.reset();
-        console.log('Данные ' + message + ' отправлены');
       };
       window.backend.send(data, onLoad, onError);
     }
