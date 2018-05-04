@@ -28,7 +28,7 @@ window.card = (function () {
 
   return {
     renderAd: function (ad) {
-      var MapAdTemplate = window.globals.template.querySelector('article');
+      var MapAdTemplate = window.utils.template.querySelector('article');
       var MapAdElement = MapAdTemplate.cloneNode(true);
       MapAdElement.querySelector('.popup__avatar').alt = ad.author.avatar;
       MapAdElement.querySelector('.popup__title').textContent = ad.offer.title;
@@ -43,7 +43,7 @@ window.card = (function () {
       MapAdElement.querySelector('.popup__avatar').src = ad.author.avatar;
 
       var typeElement = MapAdElement.querySelector('.popup__type');
-      typeElement.textContent = window.globals.TYPES_INFO[ad.offer.type].translation;
+      typeElement.textContent = window.utils.TYPES_INFO[ad.offer.type].translation;
 
       renderPhotos(MapAdElement, ad);
       renderFeatures(MapAdElement, ad);

@@ -2,7 +2,7 @@
 
 window.pin = (function () {
   var renderPin = function (ad) {
-    var MapButtonTemplate = window.globals.template.querySelectorAll('button')[1];
+    var MapButtonTemplate = window.utils.template.querySelectorAll('button')[1];
     var MapPinElement = MapButtonTemplate.cloneNode(true);
     MapPinElement.style = 'left:' + ad.location.x + 'px; top:'
       + ad.location.y + 'px;';
