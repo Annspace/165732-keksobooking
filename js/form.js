@@ -43,57 +43,63 @@ window.form = (function () {
     }, 4000);
   };
 
-  return {
-    setAddressField: function (pin) {
-      var leftCoords = pin.style.left;
-      var topCoords = pin.style.top;
-      // поправка на острый конец
-      var slicedLeft = Number(leftCoords.substring(0, leftCoords.length - window.utils.PX)) + window.utils.PIN_EDGE_LEFT;
-      var slicedTop = Number(topCoords.substring(0, topCoords.length - window.utils.PX)) + window.utils.PIN_EDGE_TOP;
-      window.utils.addressField.value = slicedLeft + ',' + slicedTop;
+  var setAddressField = function (pin) {
+    var leftCoords = pin.style.left;
+    var topCoords = pin.style.top;
+    // поправка на острый конец
+    var slicedLeft = Number(leftCoords.substring(0, leftCoords.length - window.utils.PX)) + window.utils.PIN_EDGE_LEFT;
+    var slicedTop = Number(topCoords.substring(0, topCoords.length - window.utils.PX)) + window.utils.PIN_EDGE_TOP;
+    window.utils.addressField.value = slicedLeft + ',' + slicedTop;
 
-    },
-    synchronizeFields: function (e) {
-      var capacity = document.getElementById('capacity');
-      var room = document.getElementById('room_number');
-      var type = document.getElementById('type');
-      var timeIn = document.getElementById('timein');
-      var timeOut = document.getElementById('timeout');
-      switch (e.target) {
-        case capacity || room:
-          compareRoomsGuests(Number(capacity.value), Number(room.value));
-          break;
-        case type:
-          compareTypePrice(e.target.value);
-          break;
-        case timeIn:
-          timeInOut(e.target.value);
-          break;
-        case timeOut:
-          timeInOut(e.target.value);
-          break;
-      }
-    },
+  };
 
-    receiveData: function () {
-      var onLoad = function (data) {
-        window.pin.fillPins(data);
-        for (var i = 0; i < data.length; i++) {
-          window.utils.ads.push(data[i]);
-        }
-      };
-      window.backend.load(onLoad, onError);
-    },
-
-    sendData: function (evt) {
-      evt.preventDefault();
-      var FD = new FormData(window.utils.form);
-      var data = FD;
-
-      var onLoad = function () {
-        window.utils.form.reset();
-      };
-      window.backend.send(data, onLoad, onError);
+  var synchronizeFields = function (e) {
+    var capacity = document.getElementById('capacity');
+    var room = document.getElementById('room_number');
+    var type = document.getElementById('type');
+    var timeIn = document.getElementById('timein');
+    var timeOut = document.getElementById('timeout');
+    switch (e.target) {
+      case capacity || room:
+        compareRoomsGuests(Number(capacity.value), Number(room.value));
+        break;
+      case type:
+        compareTypePrice(e.target.value);
+        break;
+      case timeIn:
+        timeInOut(e.target.value);
+        break;
+      case timeOut:
+        timeInOut(e.target.value);
+        break;
     }
+  };
+
+  var receiveData = function () {
+    var onLoad = function (data) {
+      window.pin.fillPins(data);
+      for (var i = 0; i < data.length; i++) {
+        window.utils.ads.push(data[i]);
+      }
+    };
+    window.backend.load(onLoad, onError);
+  };
+
+  var sendData = function (evt) {
+    evt.preventDefault();
+    var FD = new FormData(window.utils.form);
+    var data = FD;
+
+    var onLoad = function () {
+      window.utils.form.reset();
+    };
+    window.backend.send(data, onLoad, onError);
+  };
+
+  return {
+    setAddressField: setAddressField,
+    synchronizeFields: synchronizeFields,
+    receiveData: receiveData,
+    sendData: sendData
   };
 })();

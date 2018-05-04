@@ -12,13 +12,15 @@ window.pin = (function () {
     return MapPinElement;
   };
 
-  return {
-    fillPins: function (data) {
-      var fragment = document.createDocumentFragment();
-      for (var i = 0; i < data.length; i++) {
-        fragment.appendChild(renderPin(data[i]));
-      }
-      document.querySelector('.map__pins').appendChild(fragment);
+  var fillPins = function (data) {
+    var fragment = document.createDocumentFragment();
+    for (var i = 0; i < data.length; i++) {
+      fragment.appendChild(renderPin(data[i]));
     }
+    document.querySelector('.map__pins').appendChild(fragment);
+  };
+
+  return {
+    fillPins: fillPins
   };
 })();
