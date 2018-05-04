@@ -146,9 +146,4 @@ window.map = (function () {
   window.utils.pinMain.addEventListener('mousedown', dragAndDrop);
   window.utils.form.addEventListener('submit', window.form.sendData);
 
-  var address = document.getElementById('address');
-  address.addEventListener('focus', function (evt) {
-    evt.preventDefault();
-  });
-
 })();
