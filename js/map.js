@@ -41,18 +41,25 @@ window.map = (function () {
 
   var makeMapInactive = function () {
     var fields = document.querySelectorAll('fieldset');
-    for (var i = 0; i < fields.length; i++) {
-      fields[i].disabled = true;
-    }
+    var filtersElements = document.querySelectorAll('.map__filter');
+    // привязываем контекст исполнения к массивоподобному объекту
+    // заимствование метода у массива
+    [].forEach.call(fields, function (it) {
+      it.disabled = true;
+    });
+    [].forEach.call(filtersElements, function (it) {
+      it.disabled = true;
+    });
     window.utils.map.classList.add('map--faded');
     window.utils.form.classList.add('ad-form--disabled');
     window.utils.form.reset();
+    window.utils.mapFilters.reset();
     if (document.querySelector('.map__card')) {
       document.querySelector('.map__card').style.display = 'none';
     }
     window.utils.addressField.setAttribute('value', window.utils.START_X + ',' + window.utils.START_Y);
     var mapPins = document.querySelectorAll('.map__pin');
-    for (i = 0; i < mapPins.length; i++) {
+    for (var i = 0; i < mapPins.length; i++) {
       mapPins[i].style.display = 'none';
       if (mapPins[i].classList.contains('map__pin--main')) {
         mapPins[i].style.display = 'block';
@@ -145,5 +152,5 @@ window.map = (function () {
   window.utils.pinMain.addEventListener('mouseup', mouseUpHandler);
   window.utils.pinMain.addEventListener('mousedown', dragAndDrop);
   window.utils.form.addEventListener('submit', window.form.sendData);
-
+  window.utils.mapFilters.addEventListener('change', window.form.debounceFilters);
 })();

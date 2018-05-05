@@ -23,12 +23,15 @@ window.utils = (function () {
     PX: 2,
     URL_SEND: 'https://js.dump.academy/keksobooking',
     URL_LOAD: 'https://js.dump.academy/keksobooking/data',
+    NUMBER_OF_PINS: 5,
+    DEBOUNCE_INTERVAL: 500,
     ads: [],
-    avatars: [],
     template: document.querySelector('template').content,
     addressField: document.getElementById('address'),
     map: document.querySelector('.map'),
     pinMain: document.querySelector('.map__pin--main'),
-    form: document.querySelector('.ad-form')
+    form: document.querySelector('.ad-form'),
+    mapFilters: document.querySelector('.map__filters'),
+    params: document.querySelectorAll('.map__filter')
   };
 })();

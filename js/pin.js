@@ -14,7 +14,7 @@ window.pin = (function () {
 
   var fillPins = function (data) {
     var fragment = document.createDocumentFragment();
-    for (var i = 0; i < data.length; i++) {
+    for (var i = 0; i < window.utils.NUMBER_OF_PINS; i++) {
       fragment.appendChild(renderPin(data[i]));
     }
     document.querySelector('.map__pins').appendChild(fragment);
