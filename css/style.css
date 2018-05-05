@@ -1217,3 +1217,15 @@ input:invalid {
       -ms-transform: translateX(-50%);
           transform: translateX(-50%);
 }
+
+.error {
+  z-index: 100;
+  position: fixed;
+  left: 0;
+  right: 0;
+  font-size: 30px;
+  margin: 0 auto;
+  text-align: center;
+  color: white;
+  background-color: red;
+}

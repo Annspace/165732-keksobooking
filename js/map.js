@@ -4,38 +4,33 @@ window.map = (function () {
   var makeMapActive = function () {
     var fields = document.querySelectorAll('fieldset');
     var adForm = document.querySelector('.ad-form');
-    window.data.generateAds();
-    window.pin.fillPins();
     for (var i = 0; i < fields.length; i++) {
       fields[i].disabled = false;
     }
-    window.globals.map.classList.remove('map--faded');
+    window.utils.map.classList.remove('map--faded');
     adForm.classList.remove('ad-form--disabled');
+    window.form.receiveData();
   };
 
 
-  // Метки и картинки связаны через src картинок
-  // Обрезаем src картинки до img/avatars/user*.png , ищем такой же src у картинок
-  // из набора ads, если нашли картинки с одинаковыми src, то добавляем соответствующий ad в DOM
-  // в первый раз просто добавляем ad, последующие разы заменяем уже добавленный
-  // отрезаем с конца (последние 10 символов)
+  // Метки и объявления связаны через координаты
+  // если нашли метки и объявления с одинаковыми координатами, то добавляем соответствующее объявление в DOM
+  // в первый раз просто добавляем объявление, последующие разы заменяем уже добавленное
 
   var showCurrentAd = function (currentPin, adsArray) {
-    var slicedCurrentPin = currentPin.src.substring(currentPin.src.length - window.globals.LENGTH_OF_NAME, currentPin.src.length);
-    for (var i = 0; i < adsArray.length; i++) {
-      window.globals.avatars[i] = adsArray[i]['author']['avatar'];
-      var slicedAdAvatar = window.globals.avatars[i].substring(window.globals.avatars[i].length - window.globals.LENGTH_OF_NAME, window.globals.avatars[i].length);
-      if (slicedAdAvatar === slicedCurrentPin) {
-        if (document.querySelector('.map__card')) {
-          var mapCardPopup = document.querySelector('.map__card');
-          mapCardPopup.parentNode.replaceChild(window.card.renderAd(window.globals.ads[i]), mapCardPopup);
-          break;
-        } else {
-          var mapFilters = document.querySelector('.map__filters-container');
-          mapFilters.parentNode.appendChild(window.card.renderAd(window.globals.ads[i]));
-          break;
-        }
-      }
+    var slicedPinLocationY = Number(currentPin.parentNode.style.top.substring(0, currentPin.parentNode.style.top.length - window.utils.PX));
+    var slicedPinLocationX = Number(currentPin.parentNode.style.left.substring(0, currentPin.parentNode.style.left.length - window.utils.PX));
+
+    var pinAd = adsArray.filter(function (it) {
+      return it.location.y === slicedPinLocationY && it.location.x === slicedPinLocationX;
+    });
+
+    if (document.querySelector('.map__card')) {
+      var mapCardPopup = document.querySelector('.map__card');
+      mapCardPopup.parentNode.replaceChild(window.card.renderAd(pinAd[0]), mapCardPopup);
+    } else {
+      var mapFilters = document.querySelector('.map__filters-container');
+      mapFilters.parentNode.appendChild(window.card.renderAd(pinAd[0]));
     }
   };
 
@@ -46,17 +41,16 @@ window.map = (function () {
 
   var makeMapInactive = function () {
     var fields = document.querySelectorAll('fieldset');
-    var adForm = document.querySelector('.ad-form');
     for (var i = 0; i < fields.length; i++) {
       fields[i].disabled = true;
     }
-    window.globals.map.classList.add('map--faded');
-    adForm.classList.add('ad-form--disabled');
-    adForm.reset();
+    window.utils.map.classList.add('map--faded');
+    window.utils.form.classList.add('ad-form--disabled');
+    window.utils.form.reset();
     if (document.querySelector('.map__card')) {
       document.querySelector('.map__card').style.display = 'none';
     }
-    window.globals.addressField.setAttribute('value', window.globals.START_X + ',' + window.globals.START_Y);
+    window.utils.addressField.setAttribute('value', window.utils.START_X + ',' + window.utils.START_Y);
     var mapPins = document.querySelectorAll('.map__pin');
     for (i = 0; i < mapPins.length; i++) {
       mapPins[i].style.display = 'none';
@@ -66,7 +60,7 @@ window.map = (function () {
     }
   };
   var adShowHide = function (e) {
-    showCurrentAd(e.target, window.globals.ads);
+    showCurrentAd(e.target, window.utils.ads);
     var buttonPin = e.target.parentNode;
     window.form.setAddressField(buttonPin);
   };
@@ -88,10 +82,10 @@ window.map = (function () {
 
   // если карта неактивна, то вызываем первую, если активна, то вторую
   var mouseUpHandler = function () {
-    if (window.globals.map.classList.contains('map--faded')) {
+    if (window.utils.map.classList.contains('map--faded')) {
       makeMapActive();
     } else {
-      window.form.setAddressField(window.globals.pinMain);
+      window.form.setAddressField(window.utils.pinMain);
     }
   };
 
@@ -116,15 +110,15 @@ window.map = (function () {
         y: moveEvt.clientY
       }; // для более частой перерисовки (16 fps) гладкое взаимодействие
 
-      var top = window.globals.pinMain.offsetTop - shift.y;
-      var left = window.globals.pinMain.offsetLeft - shift.x;
-      var mapHeight = window.globals.map.offsetHeight;
-      var mapWidth = window.globals.map.offsetWidth;
+      var top = window.utils.pinMain.offsetTop - shift.y;
+      var left = window.utils.pinMain.offsetLeft - shift.x;
+      var mapHeight = window.utils.map.offsetHeight;
+      var mapWidth = window.utils.map.offsetWidth;
 
-      if (top > 0 && top < (mapHeight - window.globals.PIN_MAIN_HEIGHT) && left > 0 && left < (mapWidth - window.globals.PIN_MAIN_WIDTH)) {
-        window.globals.pinMain.style.top = top + 'px';
-        window.globals.pinMain.style.left = left + 'px';
-        window.form.setAddressField(window.globals.pinMain);
+      if (top > 0 && top < (mapHeight - window.utils.PIN_MAIN_HEIGHT) && left > 0 && left < (mapWidth - window.utils.PIN_MAIN_WIDTH)) {
+        window.utils.pinMain.style.top = top + 'px';
+        window.utils.pinMain.style.left = left + 'px';
+        window.form.setAddressField(window.utils.pinMain);
       }
     };
 
@@ -147,6 +141,9 @@ window.map = (function () {
   // Вызываемая функция подхватывает target и в зависимости от него запускает другие фунцкии
   document.addEventListener('click', clickHandler);
   document.addEventListener('change', window.form.synchronizeFields);
-  window.globals.pinMain.addEventListener('mouseup', mouseUpHandler);
-  window.globals.pinMain.addEventListener('mousedown', dragAndDrop);
+  // на случай если пользователь просто щелкнул по главной метке (без перетаскивания)
+  window.utils.pinMain.addEventListener('mouseup', mouseUpHandler);
+  window.utils.pinMain.addEventListener('mousedown', dragAndDrop);
+  window.utils.form.addEventListener('submit', window.form.sendData);
+
 })();
