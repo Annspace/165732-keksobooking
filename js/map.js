@@ -2,13 +2,14 @@
 
 window.map = (function () {
   var makeMapActive = function () {
-    var fields = document.querySelectorAll('fieldset');
-    var adForm = document.querySelector('.ad-form');
-    for (var i = 0; i < fields.length; i++) {
-      fields[i].disabled = false;
-    }
+    [].forEach.call(window.utils.fields, function (it) {
+      it.disabled = false;
+    });
+    [].forEach.call(window.utils.filtersElements, function (it) {
+      it.disabled = false;
+    });
     window.utils.map.classList.remove('map--faded');
-    adForm.classList.remove('ad-form--disabled');
+    window.utils.form.classList.remove('ad-form--disabled');
     window.form.receiveData();
   };
 
@@ -40,14 +41,12 @@ window.map = (function () {
   };
 
   var makeMapInactive = function () {
-    var fields = document.querySelectorAll('fieldset');
-    var filtersElements = document.querySelectorAll('.map__filter');
     // привязываем контекст исполнения к массивоподобному объекту
     // заимствование метода у массива
-    [].forEach.call(fields, function (it) {
+    [].forEach.call(window.utils.fields, function (it) {
       it.disabled = true;
     });
-    [].forEach.call(filtersElements, function (it) {
+    [].forEach.call(window.utils.filtersElements, function (it) {
       it.disabled = true;
     });
     window.utils.map.classList.add('map--faded');

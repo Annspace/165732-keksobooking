@@ -31,6 +31,8 @@ window.utils = (function () {
     map: document.querySelector('.map'),
     pinMain: document.querySelector('.map__pin--main'),
     form: document.querySelector('.ad-form'),
+    fields: document.querySelectorAll('fieldset'),
+    filtersElements: document.querySelectorAll('.map__filter'),
     mapFilters: document.querySelector('.map__filters'),
     params: document.querySelectorAll('.map__filter')
   };
