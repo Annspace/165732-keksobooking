@@ -61,6 +61,10 @@ window.filter = (function () {
   };
 
   var filterComplete = function () {
+    var opendAd = document.querySelector('.map__card');
+    if (opendAd) {
+      opendAd.classList.add('hidden');
+    }
     window.utils.debounce(filterPins);
   };
 
