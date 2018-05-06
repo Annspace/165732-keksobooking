@@ -1,6 +1,13 @@
 'use strict';
 
 window.utils = (function () {
+  var lastTimeout;
+  var debounce = function (fun) {
+    if (lastTimeout) {
+      window.clearTimeout(lastTimeout);
+    }
+    lastTimeout = window.setTimeout(fun, window.utils.DEBOUNCE_INTERVAL);
+  };
   return {
     START_X: 601,
     START_Y: 401,
@@ -35,13 +42,7 @@ window.utils = (function () {
     filtersElements: document.querySelectorAll('.map__filter'),
     mapFilters: document.querySelector('.map__filters'),
     params: document.querySelectorAll('.map__filter'),
-    lastTimeout: '',
-    debounce: function (fun) {
-      if (window.utils.lastTimeout) {
-        window.clearTimeout(window.utils.lastTimeout);
-      }
-      window.utils.lastTimeout = window.setTimeout(fun, window.utils.DEBOUNCE_INTERVAL);
-    },
+    debounce: debounce,
     featuresElements: document.querySelectorAll('input[name = "features"]')
   };
 })();

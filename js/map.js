@@ -151,5 +151,5 @@ window.map = (function () {
   window.utils.pinMain.addEventListener('mouseup', mouseUpHandler);
   window.utils.pinMain.addEventListener('mousedown', dragAndDrop);
   window.utils.form.addEventListener('submit', window.form.sendData);
-  window.utils.mapFilters.addEventListener('change', window.filter.debounceFilters);
+  window.utils.mapFilters.addEventListener('change', window.filter.filterComplete);
 })();
