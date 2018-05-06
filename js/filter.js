@@ -24,8 +24,8 @@ window.filter = (function () {
     var guestsFilter = (window.utils.params[3].value === 'any') || (value.offer.guests === Number(window.utils.params[3].value));
 
     // вернет такие features, у которых стоит галочка и они не содержатся в объявлении (рассматривается только "плохой" случай)
-    var filterByFeatures = [].filter.call(window.utils.featuresElements, function (it) {
-      return it.checked && (value.offer.features.indexOf(it.value) === (-1));
+    var filterByFeatures = [].filter.call(window.utils.featuresElements, function (feature) {
+      return feature.checked && (value.offer.features.indexOf(feature.value) === (-1));
     });
     var featuresFilter = (filterByFeatures.length === 0);
 
@@ -35,12 +35,12 @@ window.filter = (function () {
   // сравнить pins и отфильтрованные объявления, для совпадающих убрать hidden
   var comparePinsAds = function (pins, ads) {
 
-    var slicedPinLocationX = [].map.call(pins, function (it) { // делаем так для node elements
-      return Number(it.parentNode.style.left.substring(0, it.parentNode.style.left.length - window.utils.PX));
+    var slicedPinLocationX = [].map.call(pins, function (pin) { // делаем так для node elements
+      return Number(pin.parentNode.style.left.substring(0, pin.parentNode.style.left.length - window.utils.PX));
     });
 
-    var slicedPinLocationY = [].map.call(pins, function (it) { // делаем так для node elements
-      return Number(it.parentNode.style.top.substring(0, it.parentNode.style.top.length - window.utils.PX));
+    var slicedPinLocationY = [].map.call(pins, function (pin) { // делаем так для node elements
+      return Number(pin.parentNode.style.top.substring(0, pin.parentNode.style.top.length - window.utils.PX));
     });
 
     for (var i = 0; i < pins.length; i++) {
