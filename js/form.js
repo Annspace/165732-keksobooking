@@ -75,16 +75,6 @@ window.form = (function () {
     }
   };
 
-  var receiveData = function () {
-    var onLoad = function (data) {
-      window.pin.fillPins(data);
-      for (var i = 0; i < data.length; i++) {
-        window.utils.ads.push(data[i]);
-      }
-    };
-    window.backend.load(onLoad, onError);
-  };
-
   var sendData = function (evt) {
     evt.preventDefault();
     var FD = new FormData(window.utils.form);
@@ -99,7 +89,7 @@ window.form = (function () {
   return {
     setAddressField: setAddressField,
     synchronizeFields: synchronizeFields,
-    receiveData: receiveData,
+    onError: onError,
     sendData: sendData
   };
 })();

@@ -14,13 +14,23 @@ window.pin = (function () {
 
   var fillPins = function (data) {
     var fragment = document.createDocumentFragment();
-    for (var i = 0; i < data.length; i++) {
+    for (var i = 0; i < window.utils.NUMBER_OF_PINS; i++) {
       fragment.appendChild(renderPin(data[i]));
     }
     document.querySelector('.map__pins').appendChild(fragment);
   };
 
+  var receiveData = function () {
+    var onLoad = function (data) {
+      fillPins(data);
+      for (var i = 0; i < window.utils.NUMBER_OF_PINS; i++) {
+        window.utils.ads.push(data[i]);
+      }
+    };
+    window.backend.load(onLoad, window.form.onError);
+  };
+
   return {
-    fillPins: fillPins
+    receiveData: receiveData
   };
 })();
