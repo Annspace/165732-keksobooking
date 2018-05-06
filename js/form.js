@@ -75,16 +75,6 @@ window.form = (function () {
     }
   };
 
-  var receiveData = function () {
-    var onLoad = function (data) {
-      window.pin.fillPins(data);
-      for (var i = 0; i < window.utils.NUMBER_OF_PINS; i++) {
-        window.utils.ads.push(data[i]);
-      }
-    };
-    window.backend.load(onLoad, onError);
-  };
-
   var sendData = function (evt) {
     evt.preventDefault();
     var FD = new FormData(window.utils.form);
@@ -96,71 +86,10 @@ window.form = (function () {
     window.backend.send(data, onLoad, onError);
   };
 
-  var filter = function () {
-    var pins = document.querySelectorAll('.pin');
-    var featuresElements = document.querySelectorAll('input[name = "features"]');
-
-    var filteredAds = window.utils.ads.filter(function (value) {
-
-      var typeFilter = (window.utils.params[0].value === 'any') || (value.offer.type === window.utils.params[0].value);
-
-      var priceFilter;
-      switch (window.utils.params[1].value) {
-        case 'any':
-          priceFilter = true;
-          break;
-        case 'middle':
-          priceFilter = (value.offer.price >= 10000) && (value.offer.price <= 50000);
-          break;
-        case 'low':
-          priceFilter = (value.offer.price < 10000);
-          break;
-        case 'high':
-          priceFilter = (value.offer.price > 50000);
-          break;
-      }
-
-      var roomsFilter = (window.utils.params[2].value === 'any') || (value.offer.rooms === Number(window.utils.params[2].value));
-      var guestsFilter = (window.utils.params[3].value === 'any') || (value.offer.guests === Number(window.utils.params[3].value));
-
-      // вернет такие features, у которых стоит галочка и они не содержатся в объявлении (рассматривается только "плохой" случай)
-      var filterByFeatures = [].filter.call(featuresElements, function (it) {
-        return it.checked && (value.offer.features.indexOf(it.value) === (-1));
-      });
-      var featuresFilter = (filterByFeatures.length === 0);
-
-      return typeFilter && priceFilter && roomsFilter && guestsFilter && featuresFilter;
-    });
-
-    var slicedPinLocationX = [].map.call(pins, function (it) { // делаем так для node elements
-      return Number(it.parentNode.style.left.substring(0, it.parentNode.style.left.length - window.utils.PX));
-    });
-
-    var slicedPinLocationY = [].map.call(pins, function (it) { // делаем так для node elements
-      return Number(it.parentNode.style.top.substring(0, it.parentNode.style.top.length - window.utils.PX));
-    });
-
-    // сравнить pins и отфильтрованные объявления, для совпадающих убрать hidden
-    for (var i = 0; i < pins.length; i++) {
-      pins[i].parentNode.classList.add('hidden');
-      for (var k = 0; k < filteredAds.length; k++) {
-        if (slicedPinLocationY[i] === filteredAds[k].location.y && slicedPinLocationX[i] === filteredAds[k].location.x) {
-          pins[i].parentNode.classList.remove('hidden');
-        }
-      }
-    }
-  };
-
-  var debounceFilters = function () {
-    window.debounce(filter);
-  };
-
   return {
     setAddressField: setAddressField,
     synchronizeFields: synchronizeFields,
-    receiveData: receiveData,
-    sendData: sendData,
-    filter: filter,
-    debounceFilters: debounceFilters
+    onError: onError,
+    sendData: sendData
   };
 })();

@@ -20,7 +20,17 @@ window.pin = (function () {
     document.querySelector('.map__pins').appendChild(fragment);
   };
 
+  var receiveData = function () {
+    var onLoad = function (data) {
+      fillPins(data);
+      for (var i = 0; i < window.utils.NUMBER_OF_PINS; i++) {
+        window.utils.ads.push(data[i]);
+      }
+    };
+    window.backend.load(onLoad, window.form.onError);
+  };
+
   return {
-    fillPins: fillPins
+    receiveData: receiveData
   };
 })();

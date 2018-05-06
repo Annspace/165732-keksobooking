@@ -34,6 +34,14 @@ window.utils = (function () {
     fields: document.querySelectorAll('fieldset'),
     filtersElements: document.querySelectorAll('.map__filter'),
     mapFilters: document.querySelector('.map__filters'),
-    params: document.querySelectorAll('.map__filter')
+    params: document.querySelectorAll('.map__filter'),
+    lastTimeout: '',
+    debounce: function (fun) {
+      if (window.utils.lastTimeout) {
+        window.clearTimeout(window.utils.lastTimeout);
+      }
+      window.utils.lastTimeout = window.setTimeout(fun, window.utils.DEBOUNCE_INTERVAL);
+    },
+    featuresElements: document.querySelectorAll('input[name = "features"]')
   };
 })();

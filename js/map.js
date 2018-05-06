@@ -10,7 +10,7 @@ window.map = (function () {
     });
     window.utils.map.classList.remove('map--faded');
     window.utils.form.classList.remove('ad-form--disabled');
-    window.form.receiveData();
+    window.pin.receiveData();
   };
 
 
@@ -151,5 +151,5 @@ window.map = (function () {
   window.utils.pinMain.addEventListener('mouseup', mouseUpHandler);
   window.utils.pinMain.addEventListener('mousedown', dragAndDrop);
   window.utils.form.addEventListener('submit', window.form.sendData);
-  window.utils.mapFilters.addEventListener('change', window.form.debounceFilters);
+  window.utils.mapFilters.addEventListener('change', window.filter.debounceFilters);
 })();
