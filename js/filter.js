@@ -60,11 +60,11 @@ window.filter = (function () {
     comparePinsAds(pins, filteredAds);
   };
 
-  var debounceFilters = function () {
+  var filterComplete = function () {
     window.utils.debounce(filterPins);
   };
 
   return {
-    debounceFilters: debounceFilters
+    filterComplete: filterComplete
   };
 })();
