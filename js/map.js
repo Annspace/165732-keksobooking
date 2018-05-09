@@ -10,7 +10,15 @@ window.map = (function () {
     });
     window.utils.map.classList.remove('map--faded');
     window.utils.form.classList.remove('ad-form--disabled');
+    window.utils.price.setAttribute('min', '1000');
+    window.utils.price.setAttribute('placeholder', '1000');
     window.pin.receiveData();
+    var mapPins = document.querySelectorAll('.pin-js');
+    if (mapPins.length > window.utils.NUMBER_OF_PINS) {
+      for (var i = 0; i < window.utils.NUMBER_OF_PINS; i++) {
+        mapPins[i].style.display = 'block';
+      }
+    }
   };
 
 
@@ -19,8 +27,8 @@ window.map = (function () {
   // в первый раз просто добавляем объявление, последующие разы заменяем уже добавленное
 
   var showCurrentAd = function (currentPin, adsArray) {
-    var slicedPinLocationY = Number(currentPin.parentNode.style.top.substring(0, currentPin.parentNode.style.top.length - window.utils.PX));
-    var slicedPinLocationX = Number(currentPin.parentNode.style.left.substring(0, currentPin.parentNode.style.left.length - window.utils.PX));
+    var slicedPinLocationY = Number(currentPin.style.top.substring(0, currentPin.style.top.length - window.utils.PX));
+    var slicedPinLocationX = Number(currentPin.style.left.substring(0, currentPin.style.left.length - window.utils.PX));
 
     var pinAd = adsArray.filter(function (it) {
       return it.location.y === slicedPinLocationY && it.location.x === slicedPinLocationX;
@@ -60,15 +68,22 @@ window.map = (function () {
     var mapPins = document.querySelectorAll('.map__pin');
     for (var i = 0; i < mapPins.length; i++) {
       mapPins[i].style.display = 'none';
+      mapPins[i].classList.remove('filtered');
       if (mapPins[i].classList.contains('map__pin--main')) {
         mapPins[i].style.display = 'block';
+        mapPins[i].style.left = '570px';
+        mapPins[i].style.top = '375px';
       }
     }
+    window.utils.price.removeAttribute('min');
+    window.utils.price.removeAttribute('placeholder');
+    var preview = document.querySelector('.ad-form-header__preview img');
+    preview.setAttribute('src', window.utils.DEFAULT_AVATAR);
   };
-  var adShowHide = function (e) {
-    showCurrentAd(e.target, window.utils.ads);
-    var buttonPin = e.target.parentNode;
-    window.form.setAddressField(buttonPin);
+
+  var adShowHide = function (pinButton) {
+    showCurrentAd(pinButton, window.utils.ads);
+    window.form.setAddressField(pinButton);
   };
 
   // функции для обработчиков
@@ -76,10 +91,12 @@ window.map = (function () {
 
   var clickHandler = function (e) {
     var clickedElem = e.target;
-    if (clickedElem.classList.contains('pin')) {
-      adShowHide(e);
+    if (clickedElem.classList.contains('pin-js')) {
+      adShowHide(clickedElem);
+    } else if (clickedElem.parentNode !== document && clickedElem.parentNode.classList.contains('pin-js')) {
+      adShowHide(clickedElem.parentNode);
     } else if (clickedElem.classList.contains('ad-form__reset')) {
-      makeMapInactive(e);
+      makeMapInactive();
     } else if (clickedElem.classList.contains('popup__close')) {
       closeAd();
     }
@@ -152,4 +169,8 @@ window.map = (function () {
   window.utils.pinMain.addEventListener('mousedown', dragAndDrop);
   window.utils.form.addEventListener('submit', window.form.sendData);
   window.utils.mapFilters.addEventListener('change', window.filter.filterComplete);
+
+  return {
+    makeMapInactive: makeMapInactive
+  };
 })();

@@ -127,7 +127,7 @@
 
       <fieldset class="ad-form__element ad-form__element--price">
         <label class="ad-form__label" for="price">Цена за ночь, руб.</label>
-        <input id="price" name="price" type="number" placeholder="1000" min = 1000 required maxlength="1000000">
+        <input id="price" name="price" type="number" required maxlength="1000000">
       </fieldset>
 
       <fieldset class="ad-form__element ad-form__element--time">
@@ -198,7 +198,7 @@
             <input type="file" id="images" name="images" class="ad-form__input visually-hidden">
             <label for="images" class="ad-form__drop-zone">Загрузите или&nbsp;перетащите сюда фото</label>
           </div>
-          <div class="ad-form__photo"></div>
+          <div class="ad-form__photo" draggable="true"></div>
         </div>
       </fieldset>
 
@@ -262,7 +262,7 @@
     </div>
   </article>
 
-  <button type="button" class="map__pin" style="left: 200px; top: 400px;"><img src="img/avatars/user07.png" width="40" height="40" draggable="false" class = "pin" alt="Метка объявления"></button>
+  <button type="button" class="map__pin pin-js" style="left: 200px; top: 400px;"><img src="img/avatars/user07.png" width="40" height="40" draggable="false" alt="Метка объявления"></button>
 </template>
 
 <!-- порядок важен -->
@@ -273,5 +273,6 @@
 <script src="js/form.js"></script>
 <script src="js/backend.js"></script>
 <script src="js/map.js"></script>
+<script src="js/pictures.js"></script>
 </body>
 </html>

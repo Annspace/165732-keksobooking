@@ -10,13 +10,13 @@ window.filter = (function () {
         priceFilter = true;
         break;
       case 'middle':
-        priceFilter = (value.offer.price >= 10000) && (value.offer.price <= 50000);
+        priceFilter = (value.offer.price >= window.utils.MIN_PRICE) && (value.offer.price <= window.utils.MAX_PRICE);
         break;
       case 'low':
-        priceFilter = (value.offer.price < 10000);
+        priceFilter = (value.offer.price < window.utils.MIN_PRICE);
         break;
       case 'high':
-        priceFilter = (value.offer.price > 50000);
+        priceFilter = (value.offer.price > window.utils.MAX_PRICE);
         break;
     }
 
@@ -27,6 +27,7 @@ window.filter = (function () {
     var filterByFeatures = [].filter.call(window.utils.featuresElements, function (feature) {
       return feature.checked && (value.offer.features.indexOf(feature.value) === (-1));
     });
+    // если true, то всё ок
     var featuresFilter = (filterByFeatures.length === 0);
 
     return typeFilter && priceFilter && roomsFilter && guestsFilter && featuresFilter;
@@ -36,34 +37,48 @@ window.filter = (function () {
   var comparePinsAds = function (pins, ads) {
 
     var slicedPinLocationX = [].map.call(pins, function (pin) { // делаем так для node elements
-      return Number(pin.parentNode.style.left.substring(0, pin.parentNode.style.left.length - window.utils.PX));
+      return Number(pin.style.left.substring(0, pin.style.left.length - window.utils.PX));
     });
 
     var slicedPinLocationY = [].map.call(pins, function (pin) { // делаем так для node elements
-      return Number(pin.parentNode.style.top.substring(0, pin.parentNode.style.top.length - window.utils.PX));
+      return Number(pin.style.top.substring(0, pin.style.top.length - window.utils.PX));
     });
 
     for (var i = 0; i < pins.length; i++) {
-      pins[i].parentNode.classList.add('hidden');
+      pins[i].classList.remove('filtered');
       for (var k = 0; k < ads.length; k++) {
         if (slicedPinLocationY[i] === ads[k].location.y &&
           slicedPinLocationX[i] === ads[k].location.x) {
-          pins[i].parentNode.classList.remove('hidden');
+          pins[i].classList.add('filtered');
         }
       }
     }
   };
 
   var filterPins = function () {
-    var pins = document.querySelectorAll('.pin');
+    var pins = document.querySelectorAll('.pin-js');
     var filteredAds = window.utils.ads.filter(filterByParams);
     comparePinsAds(pins, filteredAds);
+    var filteredPins = document.querySelectorAll('.filtered');
+    // показываем отфильтрованные пины
+    for (var i = 0; i < pins.length; i++) {
+      pins[i].style.display = 'none';
+      if (pins[i].classList.contains('filtered')) {
+        pins[i].style.display = 'block';
+      }
+    }
+    // не более пяти меток
+    if (filteredPins.length > window.utils.NUMBER_OF_PINS) {
+      for (i = window.utils.NUMBER_OF_PINS; i < filteredPins.length; i++) {
+        filteredPins[i].style.display = 'none';
+      }
+    }
   };
 
   var filterComplete = function () {
-    var opendAd = document.querySelector('.map__card');
-    if (opendAd) {
-      opendAd.classList.add('hidden');
+    var openedAd = document.querySelector('.map__card');
+    if (openedAd) {
+      openedAd.classList.add('hidden');
     }
     window.utils.debounce(filterPins);
   };

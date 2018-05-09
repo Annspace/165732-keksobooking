@@ -11,13 +11,13 @@ window.form = (function () {
   // синхронизация числа гостей и комнат
   var compareRoomsGuests = function (capVal, roomVal) {
     var capacity = document.getElementById('capacity');
-    if (capVal !== 1 && roomVal === 1) {
+    if (capVal !== window.utils.ONE_GUEST && roomVal === window.utils.ONE_ROOM) {
       capacity.setCustomValidity('Для 1 гостя');
-    } else if ((capVal === 0 || capVal === 3) && roomVal === 2) {
+    } else if ((capVal === window.utils.NO_GUESTS || window.utils.THREE_GUESTS) && roomVal === window.utils.TWO_ROOMS) {
       capacity.setCustomValidity('Для 2 гостей или 1 гостя');
-    } else if (capVal === 0 && roomVal === 3) {
+    } else if (capVal === window.utils.NO_GUESTS && roomVal === window.utils.THREE_ROOMS) {
       capacity.setCustomValidity('для 3 гостей, для 2 гостей или для 1 гостя');
-    } else if (capVal !== 0 && roomVal === 100) {
+    } else if (capVal > window.utils.NO_GUESTS && roomVal === window.utils.HUNDRED_ROOMS) {
       capacity.setCustomValidity('не для гостей');
     } else {
       capacity.setCustomValidity('');
@@ -50,7 +50,6 @@ window.form = (function () {
     var slicedLeft = Number(leftCoords.substring(0, leftCoords.length - window.utils.PX)) + window.utils.PIN_EDGE_LEFT;
     var slicedTop = Number(topCoords.substring(0, topCoords.length - window.utils.PX)) + window.utils.PIN_EDGE_TOP;
     window.utils.addressField.value = slicedLeft + ',' + slicedTop;
-
   };
 
   var synchronizeFields = function (e) {
@@ -60,7 +59,8 @@ window.form = (function () {
     var timeIn = document.getElementById('timein');
     var timeOut = document.getElementById('timeout');
     switch (e.target) {
-      case capacity || room:
+      case capacity:
+      case room:
         compareRoomsGuests(Number(capacity.value), Number(room.value));
         break;
       case type:
@@ -82,6 +82,7 @@ window.form = (function () {
 
     var onLoad = function () {
       window.utils.form.reset();
+      window.map.makeMapInactive();
     };
     window.backend.send(data, onLoad, onError);
   };

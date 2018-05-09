@@ -25,13 +25,24 @@ window.utils = (function () {
       404: 'Сорри, ничего не найдено', 500: 'На сервере какая-то ошибочка'},
     PIN_MAIN_HEIGHT: 80, // поправка на острый конец
     PIN_MAIN_WIDTH: 62, // поправка на острый конец
+    MIN_PRICE: 10000,
+    MAX_PRICE: 50000,
+    ONE_ROOM: 1,
+    TWO_ROOMS: 2,
+    THREE_ROOMS: 3,
+    HUNDRED_ROOMS: 100,
+    NO_GUESTS: 0,
+    THREE_GUESTS: 3,
+    ONE_GUEST: 1,
     SUCCESS_STATUS: 200,
     TIMEOUT: 1000,
     PX: 2,
     URL_SEND: 'https://js.dump.academy/keksobooking',
     URL_LOAD: 'https://js.dump.academy/keksobooking/data',
+    DEFAULT_AVATAR: 'img/muffin-grey.svg',
     NUMBER_OF_PINS: 5,
     DEBOUNCE_INTERVAL: 500,
+    FILE_TYPES: ['gif', 'jpg', 'jpeg', 'png'],
     ads: [],
     template: document.querySelector('template').content,
     addressField: document.getElementById('address'),
@@ -43,6 +54,7 @@ window.utils = (function () {
     mapFilters: document.querySelector('.map__filters'),
     params: document.querySelectorAll('.map__filter'),
     debounce: debounce,
-    featuresElements: document.querySelectorAll('input[name = "features"]')
+    featuresElements: document.querySelectorAll('input[name = "features"]'),
+    price: document.getElementById('price')
   };
 })();
