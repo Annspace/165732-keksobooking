@@ -1,13 +1,19 @@
+/* eslint-disable no-undefined */
 'use strict';
 
 window.backend = (function () {
 
-  var load = function (onLoad, onError) {
+  // если параметра data нет, то происходит загрузка, если есть, то отправка
+  var sendLoadData = function (onLoad, onError, data) {
     var xhr = new XMLHttpRequest();
-    var url = window.utils.URL_LOAD;
-    // не надо парсить ответ
-    xhr.responseType = 'json';
-
+    var url;
+    if (typeof data === 'undefined') {
+      url = window.utils.URL_LOAD;
+      // не надо парсить ответ
+      xhr.responseType = 'json';
+    } else {
+      url = window.utils.URL_SEND;
+    }
     xhr.addEventListener('load', function () {
       if (xhr.status === window.utils.SUCCESS_STATUS) {
         onLoad(xhr.response);
@@ -25,44 +31,21 @@ window.backend = (function () {
       onError('Запрос не успел выполниться за ' + xhr.timeout + 'мс');
     });
 
-    xhr.timeout = window.utils.TIMEOUT; // 10s
+    xhr.timeout = window.utils.TIMEOUT;
+    if (typeof data === 'undefined') {
+      xhr.open('GET', url);
+      // отправить запрос
+      xhr.send();
+    } else {
+      xhr.open('POST', url);
+      // отправить данные
+      xhr.send(data);
+    }
 
-    xhr.open('GET', url);
-    // отправить запрос
-    xhr.send();
-  };
-
-  var send = function (data, onLoad, onError) {
-    var xhr = new XMLHttpRequest();
-    var url = window.utils.URL_SEND;
-
-    // есть два типа ошибок: одни связаны с сервером, другие происходят в момент загрузки,
-    // поэтому два раза вызываем onError
-
-    xhr.addEventListener('load', function () {
-      if (xhr.status === window.utils.SUCCESS_STATUS) {
-        onLoad(xhr.response);
-      } else {
-        onError(xhr.status);
-      }
-    });
-
-    xhr.addEventListener('error', function () {
-      onError('Произошла ошибка соединения');
-    });
-
-    xhr.addEventListener('timeout', function () {
-      onError('Передача не успела выполниться за ' + xhr.timeout + 'мс');
-    });
-
-    xhr.open('POST', url);
-    // отправить данные
-    xhr.send(data);
   };
 
   return {
-    load: load,
-    send: send
+    sendLoadData: sendLoadData
   };
 
 })();

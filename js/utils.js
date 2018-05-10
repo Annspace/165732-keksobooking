@@ -25,6 +25,8 @@ window.utils = (function () {
       404: 'Сорри, ничего не найдено', 500: 'На сервере какая-то ошибочка'},
     PIN_MAIN_HEIGHT: 80, // поправка на острый конец
     PIN_MAIN_WIDTH: 62, // поправка на острый конец
+    PIN_MAIN_START_LEFT: 570,
+    PIN_MAIN_START_TOP: 375,
     MIN_PRICE: 10000,
     MAX_PRICE: 50000,
     ONE_ROOM: 1,
@@ -36,6 +38,7 @@ window.utils = (function () {
     ONE_GUEST: 1,
     SUCCESS_STATUS: 200,
     TIMEOUT: 1000,
+    TIMEOUT_ERROR: 4000,
     PX: 2,
     URL_SEND: 'https://js.dump.academy/keksobooking',
     URL_LOAD: 'https://js.dump.academy/keksobooking/data',
@@ -50,7 +53,6 @@ window.utils = (function () {
     pinMain: document.querySelector('.map__pin--main'),
     form: document.querySelector('.ad-form'),
     fields: document.querySelectorAll('fieldset'),
-    filtersElements: document.querySelectorAll('.map__filter'),
     mapFilters: document.querySelector('.map__filters'),
     params: document.querySelectorAll('.map__filter'),
     debounce: debounce,

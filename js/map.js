@@ -1,19 +1,24 @@
 'use strict';
 
 window.map = (function () {
+
+  // если активны, сделать неактивными
+  var switchFields = function (fields) {
+    [].forEach.call(fields, function (it) {
+      it.disabled = !it.disabled;
+    });
+  };
+
   var makeMapActive = function () {
-    [].forEach.call(window.utils.fields, function (it) {
-      it.disabled = false;
-    });
-    [].forEach.call(window.utils.filtersElements, function (it) {
-      it.disabled = false;
-    });
+    switchFields(window.utils.fields);
+    switchFields(window.utils.params);
     window.utils.map.classList.remove('map--faded');
     window.utils.form.classList.remove('ad-form--disabled');
     window.utils.price.setAttribute('min', '1000');
     window.utils.price.setAttribute('placeholder', '1000');
     window.pin.receiveData();
     var mapPins = document.querySelectorAll('.pin-js');
+    // не более пяти меток
     if (mapPins.length > window.utils.NUMBER_OF_PINS) {
       for (var i = 0; i < window.utils.NUMBER_OF_PINS; i++) {
         mapPins[i].style.display = 'block';
@@ -51,12 +56,9 @@ window.map = (function () {
   var makeMapInactive = function () {
     // привязываем контекст исполнения к массивоподобному объекту
     // заимствование метода у массива
-    [].forEach.call(window.utils.fields, function (it) {
-      it.disabled = true;
-    });
-    [].forEach.call(window.utils.filtersElements, function (it) {
-      it.disabled = true;
-    });
+    window.utils.ads = [];
+    switchFields(window.utils.fields);
+    switchFields(window.utils.params);
     window.utils.map.classList.add('map--faded');
     window.utils.form.classList.add('ad-form--disabled');
     window.utils.form.reset();
@@ -71,17 +73,23 @@ window.map = (function () {
       mapPins[i].classList.remove('filtered');
       if (mapPins[i].classList.contains('map__pin--main')) {
         mapPins[i].style.display = 'block';
-        mapPins[i].style.left = '570px';
-        mapPins[i].style.top = '375px';
+        mapPins[i].style.left = window.utils.PIN_MAIN_START_LEFT + 'px';
+        mapPins[i].style.top = window.utils.PIN_MAIN_START_TOP + 'px';
       }
     }
     window.utils.price.removeAttribute('min');
     window.utils.price.removeAttribute('placeholder');
     var preview = document.querySelector('.ad-form-header__preview img');
     preview.setAttribute('src', window.utils.DEFAULT_AVATAR);
+    var photos = document.querySelectorAll('.ad-form__photo');
+    for (i = 1; i < photos.length; i++) {
+      photos[i].parentNode.removeChild(photos[i]);
+    }
+    // показать серый квадратик в картинках
+    photos[0].style.display = 'block';
   };
 
-  var adShowHide = function (pinButton) {
+  var showHideAd = function (pinButton) {
     showCurrentAd(pinButton, window.utils.ads);
     window.form.setAddressField(pinButton);
   };
@@ -92,9 +100,9 @@ window.map = (function () {
   var clickHandler = function (e) {
     var clickedElem = e.target;
     if (clickedElem.classList.contains('pin-js')) {
-      adShowHide(clickedElem);
+      showHideAd(clickedElem);
     } else if (clickedElem.parentNode !== document && clickedElem.parentNode.classList.contains('pin-js')) {
-      adShowHide(clickedElem.parentNode);
+      showHideAd(clickedElem.parentNode);
     } else if (clickedElem.classList.contains('ad-form__reset')) {
       makeMapInactive();
     } else if (clickedElem.classList.contains('popup__close')) {
@@ -104,7 +112,7 @@ window.map = (function () {
 
 
   // если карта неактивна, то вызываем первую, если активна, то вторую
-  var mouseUpHandler = function () {
+  var mouseUp = function () {
     if (window.utils.map.classList.contains('map--faded')) {
       makeMapActive();
     } else {
@@ -165,10 +173,10 @@ window.map = (function () {
   document.addEventListener('click', clickHandler);
   document.addEventListener('change', window.form.synchronizeFields);
   // на случай если пользователь просто щелкнул по главной метке (без перетаскивания)
-  window.utils.pinMain.addEventListener('mouseup', mouseUpHandler);
+  window.utils.pinMain.addEventListener('mouseup', mouseUp);
   window.utils.pinMain.addEventListener('mousedown', dragAndDrop);
   window.utils.form.addEventListener('submit', window.form.sendData);
-  window.utils.mapFilters.addEventListener('change', window.filter.filterComplete);
+  window.utils.mapFilters.addEventListener('change', window.filters.filterComplete);
 
   return {
     makeMapInactive: makeMapInactive

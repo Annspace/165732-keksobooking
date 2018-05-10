@@ -1,6 +1,6 @@
 'use strict';
 
-window.filter = (function () {
+window.filters = (function () {
   var filterByParams = function (value) {
     var typeFilter = (window.utils.params[0].value === 'any') || (value.offer.type === window.utils.params[0].value);
 
@@ -59,7 +59,6 @@ window.filter = (function () {
     var pins = document.querySelectorAll('.pin-js');
     var filteredAds = window.utils.ads.filter(filterByParams);
     comparePinsAds(pins, filteredAds);
-    var filteredPins = document.querySelectorAll('.filtered');
     // показываем отфильтрованные пины
     for (var i = 0; i < pins.length; i++) {
       pins[i].style.display = 'none';
@@ -67,7 +66,8 @@ window.filter = (function () {
         pins[i].style.display = 'block';
       }
     }
-    // не более пяти меток
+    // среди отфильтрованных скрываем те, которые превышают 5
+    var filteredPins = document.querySelectorAll('.filtered');
     if (filteredPins.length > window.utils.NUMBER_OF_PINS) {
       for (i = window.utils.NUMBER_OF_PINS; i < filteredPins.length; i++) {
         filteredPins[i].style.display = 'none';

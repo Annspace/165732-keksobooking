@@ -31,7 +31,7 @@ window.pin = (function () {
         window.utils.ads.push(data[i]);
       }
     };
-    window.backend.load(onLoad, window.form.onError);
+    window.backend.sendLoadData(onLoad, window.form.onError);
   };
 
   return {

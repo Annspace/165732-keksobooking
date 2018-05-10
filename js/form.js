@@ -24,7 +24,7 @@ window.form = (function () {
     }
   };
   // синхронизация времени отъезда/приезда
-  var timeInOut = function (timeVal) {
+  var compareTimeInOut = function (timeVal) {
     var timeIn = document.getElementById('timein');
     var timeOut = document.getElementById('timeout');
     timeIn.value = timeVal;
@@ -40,7 +40,7 @@ window.form = (function () {
 
     setTimeout(function () {
       document.querySelector('.error').classList.add('hidden');
-    }, 4000);
+    }, window.utils.TIMEOUT_ERROR);
   };
 
   var setAddressField = function (pin) {
@@ -67,10 +67,8 @@ window.form = (function () {
         compareTypePrice(e.target.value);
         break;
       case timeIn:
-        timeInOut(e.target.value);
-        break;
       case timeOut:
-        timeInOut(e.target.value);
+        compareTimeInOut(e.target.value);
         break;
     }
   };
@@ -84,7 +82,7 @@ window.form = (function () {
       window.utils.form.reset();
       window.map.makeMapInactive();
     };
-    window.backend.send(data, onLoad, onError);
+    window.backend.sendLoadData(onLoad, onError, data);
   };
 
   return {
