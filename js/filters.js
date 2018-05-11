@@ -1,6 +1,6 @@
 'use strict';
 
-window.filters = (function () {
+(function () {
   var filterByParams = function (value) {
     var typeFilter = (window.utils.params[0].value === 'any') || (value.offer.type === window.utils.params[0].value);
 
@@ -83,7 +83,7 @@ window.filters = (function () {
     window.utils.debounce(filterPins);
   };
 
-  return {
+  window.filters = {
     filterComplete: filterComplete
   };
 })();

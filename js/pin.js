@@ -1,6 +1,6 @@
 'use strict';
 
-window.pin = (function () {
+(function () {
   var renderPin = function (ad) {
     var MapButtonTemplate = window.utils.template.querySelector('.pin-js');
     var MapPinElement = MapButtonTemplate.cloneNode(true);
@@ -35,7 +35,7 @@ window.pin = (function () {
     window.backend.sendLoadData(onLoad, window.form.onError);
   };
 
-  return {
+  window.pin = {
     receiveData: receiveData
   };
 })();

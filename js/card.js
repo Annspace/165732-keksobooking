@@ -1,6 +1,6 @@
 'use strict';
 
-window.card = (function () {
+(function () {
   var renderPhotos = function (MapAdElement, ad) {
     MapAdElement.querySelector('.popup__photo').src = ad.offer.photos[0];
     var image = MapAdElement.querySelector('.popup__photo');
@@ -50,7 +50,7 @@ window.card = (function () {
     return MapAdElement;
   };
 
-  return {
+  window.card = {
     renderAd: renderAd
   };
 })();

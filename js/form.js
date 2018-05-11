@@ -1,6 +1,6 @@
 'use strict';
 
-window.form = (function () {
+(function () {
 // синхронизация типа жилья и цены за ночь
   var compareTypePrice = function (type) {
     window.utils.price.placeholder = window.utils.TYPES_INFO[type].price;
@@ -77,7 +77,7 @@ window.form = (function () {
     window.backend.sendLoadData(onLoad, onError, data);
   };
 
-  return {
+  window.form = {
     setAddressField: setAddressField,
     synchronizeFields: synchronizeFields,
     onError: onError,

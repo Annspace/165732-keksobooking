@@ -1,6 +1,6 @@
 'use strict';
 
-window.pictures = (function () {
+(function () {
   var loadPicture = function (fileChooser, preview) {
     fileChooser.addEventListener('change', function () {
       var file = fileChooser.files[0];

@@ -1,6 +1,6 @@
 'use strict';
 
-window.utils = (function () {
+(function () {
   var lastTimeout;
   var debounce = function (fun) {
     if (lastTimeout) {
@@ -28,7 +28,7 @@ window.utils = (function () {
   var params = formFilters.querySelectorAll('.map__filter');
   var features = map.querySelectorAll('input[name = "features"]');
 
-  return {
+  window.utils = {
     START_X: 601,
     START_Y: 401,
     NUMBER_PINS: 8,

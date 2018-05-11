@@ -1,6 +1,6 @@
 'use strict';
 
-window.backend = (function () {
+(function () {
 
   // если параметра data нет, то происходит загрузка, если есть, то отправка
   var sendLoadData = function (onLoad, onError, data) {
@@ -43,7 +43,7 @@ window.backend = (function () {
 
   };
 
-  return {
+  window.backend = {
     sendLoadData: sendLoadData
   };
 

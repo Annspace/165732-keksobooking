@@ -1,6 +1,6 @@
 'use strict';
 
-window.map = (function () {
+(function () {
 
   // если активны, сделать неактивными
   var switchFields = function (fields) {
@@ -177,7 +177,7 @@ window.map = (function () {
   window.utils.formAd.addEventListener('submit', window.form.sendData);
   window.utils.formFilters.addEventListener('change', window.filters.filterComplete);
 
-  return {
+  window.map = {
     makeMapInactive: makeMapInactive
   };
 })();
