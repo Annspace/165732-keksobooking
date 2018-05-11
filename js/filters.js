@@ -24,7 +24,7 @@ window.filters = (function () {
     var guestsFilter = (window.utils.params[3].value === 'any') || (value.offer.guests === Number(window.utils.params[3].value));
 
     // вернет такие features, у которых стоит галочка и они не содержатся в объявлении (рассматривается только "плохой" случай)
-    var filterByFeatures = [].filter.call(window.utils.featuresElements, function (feature) {
+    var filterByFeatures = [].filter.call(window.utils.features, function (feature) {
       return feature.checked && (value.offer.features.indexOf(feature.value) === (-1));
     });
     // если true, то всё ок
@@ -56,7 +56,7 @@ window.filters = (function () {
   };
 
   var filterPins = function () {
-    var pins = document.querySelectorAll('.pin-js');
+    var pins = window.utils.map.querySelectorAll('.pin-js');
     var filteredAds = window.utils.ads.filter(filterByParams);
     comparePinsAds(pins, filteredAds);
     // показываем отфильтрованные пины
@@ -76,7 +76,7 @@ window.filters = (function () {
   };
 
   var filterComplete = function () {
-    var openedAd = document.querySelector('.map__card');
+    var openedAd = window.utils.map.querySelector('.map__card');
     if (openedAd) {
       openedAd.classList.add('hidden');
     }

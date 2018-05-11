@@ -13,11 +13,11 @@ window.map = (function () {
     switchFields(window.utils.fields);
     switchFields(window.utils.params);
     window.utils.map.classList.remove('map--faded');
-    window.utils.form.classList.remove('ad-form--disabled');
+    window.utils.formAd.classList.remove('ad-form--disabled');
     window.utils.price.setAttribute('min', '1000');
     window.utils.price.setAttribute('placeholder', '1000');
     window.pin.receiveData();
-    var mapPins = document.querySelectorAll('.pin-js');
+    var mapPins = window.utils.map.querySelectorAll('.pin-js');
     // не более пяти меток
     if (mapPins.length > window.utils.NUMBER_OF_PINS) {
       for (var i = 0; i < window.utils.NUMBER_OF_PINS; i++) {
@@ -39,17 +39,16 @@ window.map = (function () {
       return it.location.y === slicedPinLocationY && it.location.x === slicedPinLocationX;
     });
 
-    if (document.querySelector('.map__card')) {
-      var mapCardPopup = document.querySelector('.map__card');
+    if (window.utils.map.querySelector('.map__card')) {
+      var mapCardPopup = window.utils.map.querySelector('.map__card');
       mapCardPopup.parentNode.replaceChild(window.card.renderAd(pinAd[0]), mapCardPopup);
     } else {
-      var mapFilters = document.querySelector('.map__filters-container');
-      mapFilters.parentNode.appendChild(window.card.renderAd(pinAd[0]));
+      window.utils.formFilters.parentNode.appendChild(window.card.renderAd(pinAd[0]));
     }
   };
 
   var closeAd = function () {
-    var mapCardPopup = document.querySelector('.map__card');
+    var mapCardPopup = window.utils.map.querySelector('.map__card');
     mapCardPopup.classList.add('hidden');
   };
 
@@ -60,14 +59,14 @@ window.map = (function () {
     switchFields(window.utils.fields);
     switchFields(window.utils.params);
     window.utils.map.classList.add('map--faded');
-    window.utils.form.classList.add('ad-form--disabled');
-    window.utils.form.reset();
-    window.utils.mapFilters.reset();
-    if (document.querySelector('.map__card')) {
-      document.querySelector('.map__card').style.display = 'none';
+    window.utils.formAd.classList.add('ad-form--disabled');
+    window.utils.formAd.reset();
+    window.utils.formFilters.reset();
+    if (window.utils.map.querySelector('.map__card')) {
+      window.utils.map.querySelector('.map__card').style.display = 'none';
     }
     window.utils.addressField.setAttribute('value', window.utils.START_X + ',' + window.utils.START_Y);
-    var mapPins = document.querySelectorAll('.map__pin');
+    var mapPins = window.utils.map.querySelectorAll('.map__pin');
     for (var i = 0; i < mapPins.length; i++) {
       mapPins[i].style.display = 'none';
       mapPins[i].classList.remove('filtered');
@@ -79,9 +78,9 @@ window.map = (function () {
     }
     window.utils.price.removeAttribute('min');
     window.utils.price.removeAttribute('placeholder');
-    var preview = document.querySelector('.ad-form-header__preview img');
+    var preview = window.utils.formAd.querySelector('.ad-form-header__preview img');
     preview.setAttribute('src', window.utils.DEFAULT_AVATAR);
-    var photos = document.querySelectorAll('.ad-form__photo');
+    var photos = window.utils.formAd.querySelectorAll('.ad-form__photo');
     for (i = 1; i < photos.length; i++) {
       photos[i].parentNode.removeChild(photos[i]);
     }
@@ -175,8 +174,8 @@ window.map = (function () {
   // на случай если пользователь просто щелкнул по главной метке (без перетаскивания)
   window.utils.pinMain.addEventListener('mouseup', mouseUp);
   window.utils.pinMain.addEventListener('mousedown', dragAndDrop);
-  window.utils.form.addEventListener('submit', window.form.sendData);
-  window.utils.mapFilters.addEventListener('change', window.filters.filterComplete);
+  window.utils.formAd.addEventListener('submit', window.form.sendData);
+  window.utils.formFilters.addEventListener('change', window.filters.filterComplete);
 
   return {
     makeMapInactive: makeMapInactive

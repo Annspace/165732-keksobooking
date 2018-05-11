@@ -8,6 +8,26 @@ window.utils = (function () {
     }
     lastTimeout = window.setTimeout(fun, window.utils.DEBOUNCE_INTERVAL);
   };
+  var template = document.querySelector('template').content;
+
+  // селекторы по форме
+  var formAd = document.querySelector('.ad-form');
+  var fields = formAd.querySelectorAll('fieldset');
+  var addressField = formAd.querySelector('#address');
+  var price = formAd.querySelector('#price');
+  var capacity = formAd.querySelector('#capacity');
+  var room = formAd.querySelector('#room_number');
+  var type = formAd.querySelector('#type');
+  var timeIn = formAd.querySelector('#timein');
+  var timeOut = formAd.querySelector('#timeout');
+
+  // селекторы по карте и фильтрам
+  var map = document.querySelector('.map');
+  var pinMain = map.querySelector('.map__pin--main');
+  var formFilters = map.querySelector('.map__filters');
+  var params = formFilters.querySelectorAll('.map__filter');
+  var features = map.querySelectorAll('input[name = "features"]');
+
   return {
     START_X: 601,
     START_Y: 401,
@@ -47,16 +67,21 @@ window.utils = (function () {
     DEBOUNCE_INTERVAL: 500,
     FILE_TYPES: ['gif', 'jpg', 'jpeg', 'png'],
     ads: [],
-    template: document.querySelector('template').content,
-    addressField: document.getElementById('address'),
-    map: document.querySelector('.map'),
-    pinMain: document.querySelector('.map__pin--main'),
-    form: document.querySelector('.ad-form'),
-    fields: document.querySelectorAll('fieldset'),
-    mapFilters: document.querySelector('.map__filters'),
-    params: document.querySelectorAll('.map__filter'),
+    template: template,
+    formAd: formAd,
+    fields: fields,
+    addressField: addressField,
+    map: map,
+    pinMain: pinMain,
+    formFilters: formFilters,
+    params: params,
     debounce: debounce,
-    featuresElements: document.querySelectorAll('input[name = "features"]'),
-    price: document.getElementById('price')
+    features: features,
+    price: price,
+    capacity: capacity,
+    room: room,
+    type: type,
+    timeIn: timeIn,
+    timeOut: timeOut
   };
 })();

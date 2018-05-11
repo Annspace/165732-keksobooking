@@ -3,32 +3,28 @@
 window.form = (function () {
 // синхронизация типа жилья и цены за ночь
   var compareTypePrice = function (type) {
-    var priceElem = document.getElementById('price');
-    priceElem.placeholder = window.utils.TYPES_INFO[type].price;
-    priceElem.min = window.utils.TYPES_INFO[type].price;
+    window.utils.price.placeholder = window.utils.TYPES_INFO[type].price;
+    window.utils.price.min = window.utils.TYPES_INFO[type].price;
   };
 
   // синхронизация числа гостей и комнат
   var compareRoomsGuests = function (capVal, roomVal) {
-    var capacity = document.getElementById('capacity');
     if (capVal !== window.utils.ONE_GUEST && roomVal === window.utils.ONE_ROOM) {
-      capacity.setCustomValidity('Для 1 гостя');
+      window.utils.capacity.setCustomValidity('Для 1 гостя');
     } else if ((capVal === window.utils.NO_GUESTS || window.utils.THREE_GUESTS) && roomVal === window.utils.TWO_ROOMS) {
-      capacity.setCustomValidity('Для 2 гостей или 1 гостя');
+      window.utils.capacity.setCustomValidity('Для 2 гостей или 1 гостя');
     } else if (capVal === window.utils.NO_GUESTS && roomVal === window.utils.THREE_ROOMS) {
-      capacity.setCustomValidity('для 3 гостей, для 2 гостей или для 1 гостя');
+      window.utils.capacity.setCustomValidity('для 3 гостей, для 2 гостей или для 1 гостя');
     } else if (capVal > window.utils.NO_GUESTS && roomVal === window.utils.HUNDRED_ROOMS) {
-      capacity.setCustomValidity('не для гостей');
+      window.utils.capacity.setCustomValidity('не для гостей');
     } else {
-      capacity.setCustomValidity('');
+      window.utils.capacity.setCustomValidity('');
     }
   };
   // синхронизация времени отъезда/приезда
   var compareTimeInOut = function (timeVal) {
-    var timeIn = document.getElementById('timein');
-    var timeOut = document.getElementById('timeout');
-    timeIn.value = timeVal;
-    timeOut.value = timeVal;
+    window.utils.timeIn.value = timeVal;
+    window.utils.timeOut.value = timeVal;
   };
 
   var onError = function (error) {
@@ -53,21 +49,16 @@ window.form = (function () {
   };
 
   var synchronizeFields = function (e) {
-    var capacity = document.getElementById('capacity');
-    var room = document.getElementById('room_number');
-    var type = document.getElementById('type');
-    var timeIn = document.getElementById('timein');
-    var timeOut = document.getElementById('timeout');
     switch (e.target) {
-      case capacity:
-      case room:
-        compareRoomsGuests(Number(capacity.value), Number(room.value));
+      case window.utils.capacity:
+      case window.utils.room:
+        compareRoomsGuests(Number(window.utils.capacity.value), Number(window.utils.room.value));
         break;
-      case type:
+      case window.utils.type:
         compareTypePrice(e.target.value);
         break;
-      case timeIn:
-      case timeOut:
+      case window.utils.timeIn:
+      case window.utils.timeOut:
         compareTimeInOut(e.target.value);
         break;
     }
@@ -75,12 +66,13 @@ window.form = (function () {
 
   var sendData = function (evt) {
     evt.preventDefault();
-    var FD = new FormData(window.utils.form);
+    var FD = new FormData(window.utils.formAd);
     var data = FD;
 
     var onLoad = function () {
-      window.utils.form.reset();
+      window.utils.formAd.reset();
       window.map.makeMapInactive();
+      document.querySelector('.success').classList.remove('hidden');
     };
     window.backend.sendLoadData(onLoad, onError, data);
   };

@@ -17,8 +17,9 @@ window.pin = (function () {
     for (var i = 0; i < data.length; i++) {
       fragment.appendChild(renderPin(data[i]));
     }
-    document.querySelector('.map__pins').appendChild(fragment);
-    var pins = document.querySelectorAll('.pin-js');
+    window.utils.map.querySelector('.map__pins').appendChild(fragment);
+    var pins = window.utils.map.querySelectorAll('.pin-js');
+    // не более пяти меток
     for (i = window.utils.NUMBER_OF_PINS; i < pins.length; i++) {
       pins[i].classList.add('hidden');
     }

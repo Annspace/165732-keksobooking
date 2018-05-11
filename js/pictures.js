@@ -1,6 +1,6 @@
 'use strict';
 
-(function () {
+window.pictures = (function () {
   var loadPicture = function (fileChooser, preview) {
     fileChooser.addEventListener('change', function () {
       var file = fileChooser.files[0];
@@ -22,7 +22,7 @@
             image.style.backgroundImage = 'url(' + reader.result + ')';
             image.style.backgroundSize = 'cover';
             // скрыть серый квадрат
-            var pictures = document.querySelectorAll('.ad-form__photo');
+            var pictures = window.utils.formAd.querySelectorAll('.ad-form__photo');
             if (pictures.length > 0) {
               pictures[0].style.display = 'none';
             }
@@ -34,13 +34,13 @@
     });
   };
 
-  var drugDropPictures = function (dropZone) {
-    var druggedElem;
+  var dragDropPictures = function (dropZone) {
+    var draggedElem;
     function insertAfter(element, referenceNode) {
       referenceNode.parentNode.insertBefore(element, referenceNode.nextSibling);
     }
     dropZone.addEventListener('dragstart', function (e) {
-      druggedElem = e.target;
+      draggedElem = e.target;
     });
 
     dropZone.addEventListener('dragover', function (e) {
@@ -53,25 +53,25 @@
 
     dropZone.addEventListener('drop', function (e) {
       // когда одна фотография идёт перед другой или если последний элемент
-      if (e.target === druggedElem.nextElementSibling || e.target === dropZone.lastChild) {
+      if (e.target === draggedElem.nextElementSibling || e.target === dropZone.lastChild) {
         if (e.target.classList.contains('ad-form__photo')) {
-          insertAfter(druggedElem, e.target);
+          insertAfter(draggedElem, e.target);
         }
       } else {
         if (e.target.classList.contains('ad-form__photo')) {
-          druggedElem.parentNode.insertBefore(druggedElem, e.target);
+          draggedElem.parentNode.insertBefore(draggedElem, e.target);
         }
       }
     });
   };
 
-  var picturesChooser = document.querySelector('input[name = images]');
-  var picturesPreview = document.querySelector('.ad-form__photo');
-  var avatarChooser = document.querySelector('input[name = avatar]');
-  var avatarPreview = document.querySelector('.ad-form-header__preview img');
-  var photoDropZone = document.querySelector('.ad-form__photo-container');
+  var picturesChooser = window.utils.formAd.querySelector('input[name = images]');
+  var picturesPreview = window.utils.formAd.querySelector('.ad-form__photo');
+  var avatarChooser = window.utils.formAd.querySelector('input[name = avatar]');
+  var avatarPreview = window.utils.formAd.querySelector('.ad-form-header__preview img');
+  var photoDropZone = window.utils.formAd.querySelector('.ad-form__photo-container');
   loadPicture(avatarChooser, avatarPreview);
   loadPicture(picturesChooser, picturesPreview);
-  drugDropPictures(photoDropZone);
+  dragDropPictures(photoDropZone);
 
 })();
