@@ -59,6 +59,7 @@
     SUCCESS_STATUS: 200,
     TIMEOUT: 1000,
     TIMEOUT_ERROR: 4000,
+    ESC_BUTTON: 27,
     PX: 2,
     URL_SEND: 'https://js.dump.academy/keksobooking',
     URL_LOAD: 'https://js.dump.academy/keksobooking/data',

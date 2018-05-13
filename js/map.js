@@ -86,10 +86,18 @@
     }
     // показать серый квадратик в картинках
     photos[0].style.display = 'block';
+    document.removeEventListener('keydown', onEscPress);
   };
 
-  var showHideAd = function (pinButton) {
+  var onEscPress = function (evt) {
+    if (evt.keyCode === window.utils.ESC_BUTTON) {
+      closeAd();
+    }
+  };
+
+  var showAd = function (pinButton) {
     showCurrentAd(pinButton, window.utils.ads);
+    document.addEventListener('keydown', onEscPress);
     window.form.setAddressField(pinButton);
   };
 
@@ -99,9 +107,9 @@
   var clickHandler = function (e) {
     var clickedElem = e.target;
     if (clickedElem.classList.contains('pin-js')) {
-      showHideAd(clickedElem);
+      showAd(clickedElem);
     } else if (clickedElem.parentNode !== document && clickedElem.parentNode.classList.contains('pin-js')) {
-      showHideAd(clickedElem.parentNode);
+      showAd(clickedElem.parentNode);
     } else if (clickedElem.classList.contains('ad-form__reset')) {
       makeMapInactive();
     } else if (clickedElem.classList.contains('popup__close')) {
